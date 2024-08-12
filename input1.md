@@ -26,8 +26,6 @@ Choosing a cloud provider of your preference, guide us through the architectural
 * To highlight the opportunities that the cloud provides over their existing self-managed on-premise setup, outlining the potential benefits and enhancements the company could enjoy.
 * To demonstrate a comprehensive understanding of key considerations the company should have during this transition, such as cost, security, scalability, and data management.
 
-This segment doesn't specifically require the inclusion of Elastic. The focus is on your overall architectural understanding, cloud migration strategy, and ability to identify and address potential risks and opportunities. We not only want to hear about the high-level architecture but also technical details that show you are able to go deep. Again, this doesn't have to be Elastic-centric of course.
-
 #### Considerations and attributes
 
 The e-commerce company operates globally, has a peak load during holiday seasons, and maintains sensitive customer data due to its nature of business.
