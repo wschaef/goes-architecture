@@ -73,7 +73,19 @@
 - **Streaming Data:** The streaming content aspect of the business generates real-time data related to user viewing habits, content performance, and network traffic. The architecture needs to handle the ingestion, processing, and analysis of this streaming data to gain insights and optimize content delivery.
 - **Log and Monitoring Data:** The operation of both on-premises and cloud infrastructure generates logs and metrics related to system performance, security events, and application behavior. The architecture needs to collect, store, and analyze this data for monitoring, troubleshooting, and security purposes. 
 
-#### Volume estimation
+#### Data Privacy Conciderations
+
+| Data Domain | Public Cloud Storage | Explanation |
+|---|---|---|
+| Customer Data |  No | GDPR allows for the transfer of personal data outside the EU, but only under specific conditions. These conditions include ensuring adequate safeguards are in place to protect the data, and the data processor (e.g., the cloud provider) must comply with GDPR regulations. |
+| Transactional Data | Yes |  Transactional data may contain information that can be linked back to individuals.  Appropriate anonymization and encryption techniques can be implemented to ensure compliance with GDPR when storing this data on the public cloud. | 
+| Product Data | Yes | This data generally does not contain personal information and is less sensitive to GDPR regulations. However, if product reviews contain personally identifiable information, that would need to be considered. |
+| Streaming Data | Yes | Streaming data related to user viewing habits can be anonymized or aggregated to avoid direct identification of individuals. This data can be stored in the public cloud, but it's important to ensure appropriate security measures are in place. |
+| Log and Monitoring Data | Yes | Logs and metrics related to system performance and security events are generally not considered personal data. However, if these logs contain information that can be linked back to individuals, GDPR compliance needs to be assessed. | 
+
+> **Guideline - Technical reference to user:** A unique, anonymized identifier (e.g., a UUID) can be stored in the public cloud to reference a user. This identifier should only be linked to personal information in the on-premises systems, not in the public cloud. 
+
+#### Data volume estimation (net)
 
 | Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
 |---|---|---|---|---|
@@ -82,6 +94,8 @@
 | Product Data | 11GB | 110MB | 5.5GB | Assuming 1KB text description, 1MB images, 10MB videos per product, 1% daily product updates, and 0.5 product views per user per day. |
 | Streaming Data (Content Library) | 266.4 TB | 444 GB | 18 Tbps/hour | Assuming average bitrate of 5 Mbps across all resolutions and peak concurrency for 1 hour per day. 5% monthly content addition. |
 | Log and Monitoring Data | 18 TB | 600GB | 5GB | Assuming 10KB logs per user per day, 100 GB server logs per day, and 1% of logs are accessed for analysis. 30-day retention. |
+
+- The gross storage requirement is significantly higher than the net storage requirement due to redundancy and overhead.
 
 
 ## Stakeholders
