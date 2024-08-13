@@ -205,6 +205,9 @@ This building block is responsible for the delivery of video and audio content t
 ### Shop
 The Shop building block manages the e-commerce aspects of the system, including product listings, purchase transactions, and order fulfillment. It is used by both Consumers and Content Managers.
 
+## Order
+This building block manages the order process, including order creation, fulfillment, and tracking. It is used by the Shop building block. 
+
 ### Product
 This building block stores and manages product information, including metadata, pricing, and inventory. It is used by the Shop building block.
 
