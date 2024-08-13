@@ -194,74 +194,39 @@ The system context diagram depicts the system's boundaries and its interactions 
 
 ## Whitebox Overall System
 
+Motivation  
+*The whitebox view of the overall system provides a detailed breakdown of the system's internal components and their interactions. This view is essential for understanding the system's architecture in depth, identifying potential dependencies, and analyzing the flow of data and control within the system. It helps developers, architects, and other stakeholders understand how the system works at a granular level, enabling them to make informed decisions about design, implementation, and maintenance.* This view corresponds to C4 model level 2. 
+
 ![Whitebox View of Overall System](img/Container.drawio.svg)
 
-Motivation  
-*\<text explanation>*
+### Streaming
+This building block is responsible for the delivery of video and audio content to consumers. It handles tasks like encoding, transcoding, and streaming protocols. It is used by both Consumers and Content Managers. 
 
-Contained Building Blocks  
-*\<Description of contained building block (black boxes)>*
+### Shop
+The Shop building block manages the e-commerce aspects of the system, including product listings, purchase transactions, and order fulfillment. It is used by both Consumers and Content Managers.
 
-Important Interfaces  
-*\<Description of important interfaces>*
+### Product
+This building block stores and manages product information, including metadata, pricing, and inventory. It is used by the Shop building block.
 
-### \<Name black box 1>
+### Customer
+The Customer building block stores and manages user information, including account details, preferences, and purchase history. It is used by the Shop and Streaming building blocks.
 
-*\<Purpose/Responsibility>*
+### Payment
+This building block handles financial transactions, including payment processing and fraud detection. It is used by the Shop building block.
 
-*\<Interface(s)>*
+### IAM *(Identity and Access Management)*
+The Identity building block manages user authentication and authorization, allowing users to log in and access system resources. It is used by all building blocks.
 
-*\<(Optional) Quality/Performance Characteristics>*
+### Ticket System
+This building block provides a system for users to report issues and request support. It is used by Consumers and 1st Level Support.
 
-*\<(Optional) Directory/File Location>*
+### SIEM
+The SIEM building block monitors security events, analyzes logs, and detects potential threats. It is used by the Security team.
 
-*\<(Optional) Fulfilled Requirements>*
+### DevOps Plattform
+This building block provides tools and automation for infrastructure management, application deployment, and continuous integration/delivery. It is used by the DevOps team. 
 
-*\<(optional) Open Issues/Problems/Risks>*
 
-### \<Name black box 2>
-
-*\<black box template>*
-
-### \<Name black box n>
-
-*\<black box template>*
-
-### \<Name interface 1>
-
-…
-
-### \<Name interface m>
-
-## Level 2
-
-### White Box *\<building block 1>*
-
-*\<white box template>*
-
-### White Box *\<building block 2>*
-
-*\<white box template>*
-
-…
-
-### White Box *\<building block m>*
-
-*\<white box template>*
-
-## Level 3
-
-### White Box \<\_building block x.1\_\>
-
-*\<white box template>*
-
-### White Box \<\_building block x.2\_\>
-
-*\<white box template>*
-
-### White Box \<\_building block y.1\_\>
-
-*\<white box template>*
 
 # Runtime View
 
