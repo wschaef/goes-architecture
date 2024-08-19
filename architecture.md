@@ -185,10 +185,16 @@ The system context diagram depicts the system's boundaries and its interactions 
 - 1st Level Support - A person or team providing initial technical support to users of the system.
 
 ### External systems
+- Content Provider - A third-party service that provides media content to the system.
 - Payment Provider - A third-party service that handles financial transactions for the system (e.g., processing payments from consumers).
 - external IdP (3rd party IdP) - A third-party service that manages user identities and authentication for the system (e.g., allowing users to log in with their Google, Facebook, or other existing accounts).
 
 # Solution Strategy
+
+The solution strategy involves defining the target architecture, creating a migration path, and adopting the new architecture. 
+
+## Migration approach
+
 
 # Building Block View
 
@@ -229,7 +235,61 @@ The SIEM building block monitors security events, analyzes logs, and detects pot
 ### DevOps Plattform
 This building block provides tools and automation for infrastructure management, application deployment, and continuous integration/delivery. It is used by the DevOps team. 
 
+## High level view on hybrid cloud setup
 
+### Considerations
+
+/TODO
+
+### Design
+
+![High level view on hybrid cloud setup](img/LandingZone.drawio.svg) 
+
+## Domain Streaming
+
+### Considerations
+1.  **Video Encoding and Transcoding:**
+    - **Complexity and Resource Intensiveness**: Video encoding and transcoding require substantial computational resources, especially for high-resolution and high-bitrate content. Maintaining real-time encoding and transcoding while ensuring optimal quality across various devices and network conditions can be challenging.
+    - **Codec Selection and Optimization**: Choosing the right video codecs (e.g., H.264, H.265, AV1) and optimizing their parameters to balance compression efficiency, quality, and compatibility across different platforms is crucial.
+2.  **Content Delivery Network (CDN):**
+    - **Global Scalability**: Handling massive concurrent user requests and delivering content with minimal latency to a geographically distributed audience requires a robust CDN. Scaling the CDN infrastructure to accommodate traffic spikes and maintaining consistent performance across regions can be technically complex.
+    - **Adaptive Bitrate Streaming (ABR)**: Implementing ABR to dynamically adjust video quality based on network conditions and user device capabilities adds complexity to content delivery. Efficiently segmenting videos into multiple bitrate representations and seamlessly switching between them during playback is a technical hurdle.
+3.  **Video Player Development:**
+    - **Cross-Platform Compatibility**: Building a video player that works flawlessly across various operating systems, browsers, and devices (desktops, smartphones, tablets, smart TVs) presents significant challenges. Ensuring consistent playback experience and handling platform-specific nuances can be complex.
+    - **Low-Latency Playback**: Achieving low-latency playback, especially for live streaming events, requires careful optimization of the video player, streaming protocols, and network infrastructure. Minimizing buffering and ensuring smooth playback even with fluctuations in network conditions can be demanding.
+4.  **Digital Rights Management (DRM):**
+    - **Content Protection**: Implementing robust DRM solutions to prevent unauthorized access, copying, and distribution of content is essential. Integrating DRM technologies securely into the streaming platform while maintaining a smooth user experience can be technically challenging.
+    - **License Management**: Managing DRM licenses, including issuing, renewing, and revoking them, requires a complex backend system. Ensuring efficient license management and handling various DRM ecosystems adds technical overhead.
+5.  **User Management and Authentication:**
+    - **Secure Authentication**: Implementing secure user authentication and authorization mechanisms to protect user accounts and prevent unauthorized access is crucial. Handling password management, multi-factor authentication, and integration with third-party identity providers can be technically involved.
+    - **Subscription Management**: Managing user subscriptions, including plan upgrades, downgrades, cancellations, and payment processing, requires a robust backend system. Handling various subscription models and integrating with payment gateways adds technical complexity.
+6.  **Analytics and Monitoring:**
+    - **Real-time Monitoring**: Implementing real-time monitoring and analytics to track user engagement, playback quality, and system performance is crucial. Collecting, processing, and analyzing massive amounts of data in real time presents technical challenges.
+    - **Quality of Experience (QoE) Measurement**: Accurately measuring and optimizing QoE, including factors like buffering, startup time, and video quality, across diverse user environments and network conditions requires sophisticated analytics tools and techniques.
+
+### Design
+
+![Domain Streaming](img/DomainStreaming.drawio.svg)
+
+## Domain Customer
+
+### Considerations
+
+Domain Customer remains on premise and is interated with other domains by REST APIs.
+
+### Design
+
+![Domain Customer](img/DomainCustomer.drawio.svg) 
+
+## Domain Order
+
+### Considerations
+
+Domain Order remains on premise and is interated with other domains by REST APIs.
+
+### Design
+
+![Domain Order](img/DomainOrder.drawio.svg) 
 
 # Runtime View
 
