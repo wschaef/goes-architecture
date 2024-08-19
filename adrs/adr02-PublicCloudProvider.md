@@ -10,6 +10,8 @@
 
 ## Context
 
+The challenge is to select a public cloud provider for GOES system, considering the following factors:
+
 - GOES is transitioning from a self-managed, on-premises infrastructure to a hybrid cloud environment.
 - The company operates globally, handles sensitive customer data, and experiences peak loads during holiday seasons.
 - The architecture needs to support scalability, data privacy, compliance, and business continuity.
