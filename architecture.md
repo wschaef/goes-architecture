@@ -270,6 +270,8 @@ This building block provides tools and automation for infrastructure management,
 
 ### Design
 
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
+
 ![Domain Streaming](img/DomainStreaming.drawio.svg)
 
 ## Domain Customer
@@ -280,6 +282,8 @@ Domain Customer remains on premise and is interated with other domains by REST A
 
 ### Design
 
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
+
 ![Domain Customer](img/DomainCustomer.drawio.svg) 
 
 ## Domain Order
@@ -289,6 +293,8 @@ Domain Customer remains on premise and is interated with other domains by REST A
 Domain Order remains on premise and is interated with other domains by REST APIs.
 
 ### Design
+
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
 
 ![Domain Order](img/DomainOrder.drawio.svg) 
 
@@ -406,22 +412,61 @@ Domain Order remains on premise and is intergated with other domains by REST API
 
 ### Design
 
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
+
 ![Domain Product](img/DomainProduct.drawio.svg) 
 
-# Runtime View
+## Domain Shop
 
-## \<Runtime Scenario 1>
+### Considerations
 
--   *\<insert runtime diagram or textual description of the scenario>*
+#### Compute
 
--   *\<insert description of the notable aspects of the interactions
-    between the building block instances depicted in this diagram.>*
+**Assumptions**
+- The current architecture utilizes containers for microservices deployed on-premises.
 
-## \<Runtime Scenario 2>
+**Potential Migration Options**
+- Google Kubernetes Engine (GKE)
+- Cloud Run
 
-## …
+**Chosen Solution: Cloud Run**
 
-## \<Runtime Scenario n>
+Cloud Run's alignment with the objectives of simplifying operations, improving scalability, and reducing costs makes it the preferred solution for migration. 
+
+Domain Shop provides two web applications:
+- Shop for Consumers
+- Shop for Content Managers
+
+The reason for separating them is fundamentally different authorization requirements. 
+
+Both applications use Memorystore to maintain user session e.g tokens and cache.
+
+Business logic is implemented in the Shop API which uses Firestore to maintain user profiles. This Shop API is used by Streaming Domain to manage subscriptions and purchases. 
+
+#### Database
+
+**Assumptions:**
+- 50 million active users
+- 1 million concurrent users
+- 10KB user profile size
+- 1% of users update their profile daily
+- One user profile read per user session 
+
+| Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
+|---|---|---|---|---|
+| User Profile | 1TB | 25GB | 2,5TB | 10KB user profile size * 50 million users * 2 replication, 10KB * 50 million users * 1% * 5 scale | 10KB * 50 million users * 5 scale | 
+
+Based on the provided data, Firestore appears capable of handling the projected requirements. It comfortably accommodates the estimated 1TB of user profile data and the 25GB of daily writes. While the estimated 2.5TB of daily reads might approach Firestore's limits under peak usage or with complex queries, the platform's automatic scaling should generally manage this load. Additionally, Firestore's design inherently supports high levels of concurrency, suggesting it can handle the anticipated 1 million concurrent users, provided the data model and queries are optimized. 
+
+### Multi Region aspects
+
+Firestore provides out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
+
+### Design
+
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
+
+![Domain Shop](img/DomainShop.drawio.svg) 
 
 # Deployment View
 
