@@ -56,6 +56,7 @@
 - **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
 - **Peak Load:** Peak load during holiday seasons or special events can result in a 5x increase in traffic compared to normal conditions.
 - **Content Library:** The company has about 10,000 hours of content in its content library of on-demand video and audio content, distributed as follows: 5% SD, 70% HD, and 25% 4K. 
+- **Products** The company has about 10,000 products
 
 ### Additional conciderations
 
@@ -91,7 +92,7 @@
 |---|---|---|---|---|
 | Customer Data | 100GB | 1GB | 10GB | Assuming 1KB per user for PII and payment details, 1% daily churn rate, and 10% daily active users. |
 | Transactional Data | 5GB | 5GB | 1GB | Assuming 10% of users make a transaction per day, 1KB per transaction, and 20% of transactions result in customer service requests. |
-| Product Data | 11GB | 110MB | 5.5GB | Assuming 1KB text description, 1MB images, 10MB videos per product, 1% daily product updates, and 0.5 product views per user per day. |
+| Product Data | 110GB | 1,1GB | 2,220TB | Assuming 10KB text description, 1MB images, 10MB videos per product, 10.000 products, 1% daily product updates, and 20 product views per user per day. |
 | Streaming Data (Content Library) | 266.4 TB | 444 GB | 18 Tbps/hour | Assuming average bitrate of 5 Mbps across all resolutions and peak concurrency for 1 hour per day. 5% monthly content addition. |
 | Log and Monitoring Data | 18 TB | 600GB | 5GB | Assuming 10KB logs per user per day, 100 GB server logs per day, and 1% of logs are accessed for analysis. 30-day retention. |
 
@@ -290,6 +291,122 @@ Domain Order remains on premise and is interated with other domains by REST APIs
 ### Design
 
 ![Domain Order](img/DomainOrder.drawio.svg) 
+
+## Domain Products
+
+### Considerations
+
+#### Compute
+
+**Assumptions**
+- The current architecture utilizes containers for microservices deployed on-premises.
+
+**Potential Migration Options**
+- Google Kubernetes Engine (GKE)
+- Cloud Run
+
+**Chosen Solution: Cloud Run**
+
+**Rationale**
+
+Cloud Run's alignment with the objectives of simplifying operations, improving scalability, and reducing costs makes it the preferred solution for migration. 
+
+* **Simplified Operations:** Cloud Run's fully managed environment and serverless execution model eliminate the need for infrastructure management, allowing for a focus on application development and faster deployment cycles. 
+* **Improved Scalability**: The automatic scaling capabilities of Cloud Run ensure optimal resource utilization and cost-effectiveness, particularly in scenarios with fluctuating workloads.
+* **Reduced Costs**: The pay-per-use pricing model further contributes to cost optimization compared to the fixed costs associated with maintaining on-premises infrastructure or running a dedicated Kubernetes cluster.
+
+While GKE offers greater flexibility and control, it also introduces additional operational complexity. Cloud Run's streamlined approach is considered more suitable for the current requirements, where the priority is on achieving operational efficiency and cost savings without sacrificing the benefits of containerization.
+
+#### Database
+
+**Asumptions**:
+- 10.000 products
+- 1% daily product updates -> 100 product updates per day
+- 20 product views per user per day for 50 millions users
+- 1 million concurrent users
+- 10KB text description, 1MB images, 10MB videos per product
+
+The assumptions made in the Data volume estimation:
+
+| Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
+|---|---|---|---|---|
+| Product Data | 110GB | 1,1GB | 2,220TB | Assuming 10KB text description, 1MB images, 10MB videos per product, 10.000 products, 1% daily product updates, and 20 product views per user per day. |
+
+We have different types of data, such as media and metadata, which require different databases.
+Considering the requirement to scale five times and the need for replication for availability, the Products domain must meet the following data requirements: 
+
+| Data Type | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
+|---|---|---|---|---|
+| Meta data | 200MB | 5MB | 50TB | 10KB text description * 10000 products * 2 replication, 10kb * 100 updates * 5 scale, 10KB * 20 views * 50 million active users * 5 scale |
+| Media data | 220GB | 5,5GB | 55PB | 11BM * 10000 products * 2 replication, 11MB * 100 updates * 5 scale, 11MB * 20 views * 50 million active users * 5 scale |
+
+
+##### Meta Data
+
+Based on the requirements outlined, **Cloud Spanner** would be the most suitable database for meta data on GCP.
+
+- **Key reasons for choosing Cloud Spanner:**
+    - **Globally Distributed & Consistent:** The requirement for high read volume (50TB/day) across potentially globally distributed users points to a need for a globally scalable database with strong consistency. Cloud Spanner excels in this area, providing horizontal scalability with transactional consistency.
+    - **Relational Structure:** Metadata is often best represented in a relational structure, with relationships between various product attributes. Cloud Spanner provides a fully relational model with SQL support, making it easy to model and query the product metadata.
+    - **Low Latency Reads:** The high read volume, especially with globally distributed users, demands low latency reads. Cloud Spanner's architecture and global replication capabilities ensure low latency reads regardless of user location.
+    - **High Availability:** Product metadata is often critical for applications. Cloud Spanner's 99.999% availability SLA and automatic failover capabilities ensure your application's resilience.
+    - **Strong Writes:** Though the write volume is lower, the requirement for consistent writes at scale is crucial. Cloud Spanner's transactional guarantees ensure data integrity.
+- **Additional Considerations:**
+    - **Cost:** While Cloud Spanner offers powerful features, it can be more expensive than other options. However, the benefits of scalability, consistency, and global distribution often outweigh the cost for applications with demanding requirements.
+    - **Data Model Design:** A well-designed data model is crucial for performance and scalability in Cloud Spanner. Careful consideration of primary keys, indexes, and relationships is necessary.
+- **Alternative Considerations:**
+    - **Cloud Bigtable:** Suitable for very large-scale, low-latency applications with less structured data. May not be the best fit due to the relational nature of product metadata and the need for strong consistency.
+    - **Cloud Firestore:** Great for mobile and web applications with flexible schemas. However, Cloud Spanner is better suited for large-scale, globally distributed applications with high read volumes and the need for strong consistency. 
+
+##### Media Data
+
+Based on the significantly larger data volume and the unstructured nature of media data (videos and images), Cloud Storage emerges as the most appropriate solution on GCP.
+
+- **Key advantages of Cloud Storage:**
+    - **Massive Scalability:** Cloud Storage is designed to handle petabytes or even exabytes of data, making it well-suited for storing and serving vast amounts of media content.
+    - **Object Storage:** Media files are typically stored as objects, and Cloud Storage provides a simple and scalable object storage interface, aligning perfectly with this requirement.
+    - **High Performance:** Cloud Storage offers various storage classes with different performance characteristics, allowing for a balance between cost and performance based on specific access patterns.
+    - **Global Accessibility:** Media content often needs to be accessed from various locations, and Cloud Storage's global network ensures fast access to your media data from anywhere in the world.
+    - **Integration with other GCP services:** Cloud Storage integrates seamlessly with other GCP services like Cloud CDN for content delivery, Cloud Vision API for image analysis, and Transcoder API for video processing. This allows for building a complete media management and delivery pipeline on GCP.
+- **Additional Considerations:**
+    - **Storage Classes:** Choosing the appropriate storage class (Standard, Nearline, Coldline, Archive) based on access patterns and cost considerations is crucial.
+    - **Data Organization:** Organizing media data using buckets and object names ensures efficient retrieval and management.
+    - **Content Delivery:** Consider using Cloud CDN to optimize the delivery of media content to users around the world. 
+
+##### Search and Recomendations
+
+**Cloud Spanner's limitations**
+
+* Lacks specialized search features:
+    * Not optimized for full-text search, faceted navigation, or advanced result ranking.
+* Not designed for recommendations:
+    * Lacks built-in analytics and machine learning capabilities for personalized recommendations.
+
+**Elasticsearch is a good choice for search and recommendations**
+
+Elasticsearch, while powerful for search, can be complex to deploy and scale, requiring dedicated technical expertise. Elastic Cloud simplifies this by providing a managed service, allowing you to focus on leveraging Elasticsearch's advanced search capabilities, like full-text search, faceted navigation, and relevant result ranking, without the operational overhead.
+
+* **Specialized Search Capabilities:**
+    * Full-text Search: Efficiently handles searches across large product descriptions and details.
+    * Faceted Navigation: Allows users to refine searches by attributes like brand, color, size, etc.
+    * Relevant Result Ranking: Employs algorithms to prioritize the most relevant products in search results.
+
+* **Recommendation Engine:**
+    * Analytics & Machine Learning: Leverages user behavior and product data to generate personalized recommendations.
+
+* **Scalability:**
+    * Handles Large Catalogs: Efficiently indexes and searches through massive product catalogs.
+    * High Query Volumes: Accommodates numerous concurrent searches and recommendation requests.
+
+In summary: Elastic Cloud complements Cloud Spanner's transactional capabilities, creating a powerful combination for product-centric applications. 
+
+#### Multi Region aspects
+
+Cloud Spanner, Cloud Storage, and Elastic Cloud provide out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
+
+### Design
+
+![Domain Product](img/DomainProduct.drawio.svg) 
 
 # Runtime View
 
