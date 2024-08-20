@@ -341,22 +341,41 @@ Considering the requirement to scale five times and the need for replication for
 | Media data | 220GB | 5,5GB | 55PB | 11BM * 10000 products * 2 replication, 11MB * 100 updates * 5 scale, 11MB * 20 views * 50 million active users * 5 scale |
 
 
-##### Meta Data
+##### Meta Data 
 
-Based on the requirements outlined, **Cloud Spanner** would be the most suitable database for meta data on GCP.
+**Elastic Cloud** is selected to fulfill the following requirements:
 
-- **Key reasons for choosing Cloud Spanner:**
-    - **Globally Distributed & Consistent:** The requirement for high read volume (50TB/day) across potentially globally distributed users points to a need for a globally scalable database with strong consistency. Cloud Spanner excels in this area, providing horizontal scalability with transactional consistency.
-    - **Relational Structure:** Metadata is often best represented in a relational structure, with relationships between various product attributes. Cloud Spanner provides a fully relational model with SQL support, making it easy to model and query the product metadata.
-    - **Low Latency Reads:** The high read volume, especially with globally distributed users, demands low latency reads. Cloud Spanner's architecture and global replication capabilities ensure low latency reads regardless of user location.
-    - **High Availability:** Product metadata is often critical for applications. Cloud Spanner's 99.999% availability SLA and automatic failover capabilities ensure your application's resilience.
-    - **Strong Writes:** Though the write volume is lower, the requirement for consistent writes at scale is crucial. Cloud Spanner's transactional guarantees ensure data integrity.
-- **Additional Considerations:**
-    - **Cost:** While Cloud Spanner offers powerful features, it can be more expensive than other options. However, the benefits of scalability, consistency, and global distribution often outweigh the cost for applications with demanding requirements.
-    - **Data Model Design:** A well-designed data model is crucial for performance and scalability in Cloud Spanner. Careful consideration of primary keys, indexes, and relationships is necessary.
-- **Alternative Considerations:**
-    - **Cloud Bigtable:** Suitable for very large-scale, low-latency applications with less structured data. May not be the best fit due to the relational nature of product metadata and the need for strong consistency.
-    - **Cloud Firestore:** Great for mobile and web applications with flexible schemas. However, Cloud Spanner is better suited for large-scale, globally distributed applications with high read volumes and the need for strong consistency. 
+* **Data Storage and Management:**
+    * Data Type: Product metadata
+    * Data Volume Store: 200MB
+    * Data Volume Write per Day: 5MB
+    * Data Volume Read per Day: 50TB
+
+* **User Experience:**
+    * Advanced product search capabilities, including:
+        * Fuzzy search
+        * AI-powered search
+        * Autocomplete
+    * Personalized product recommendations
+
+**Rationale:**
+
+Elasticsearch, while powerful for search, can be complex to deploy and scale, requiring dedicated technical expertise. Elastic Cloud simplifies this by providing a managed service, allowing you to focus on leveraging Elasticsearch's advanced search capabilities, like full-text search, faceted navigation, and relevant result ranking, without the operational overhead.
+
+**Additional Benefits:**
+
+* Scalability: Elastic Cloud can easily scale to accommodate growing data volumes and user traffic.
+* Managed Service: Reduces operational overhead and eliminates the need for in-house Elasticsearch expertise.
+* High Availability: Ensures reliable access to product data and search functionality.
+
+**Implementation Notes:**
+
+* Product metadata will be indexed and stored in Elasticsearch indices within Elastic Cloud.
+* Search and recommendation APIs will be utilized to power the product search and recommendation features in the application.
+
+**Concequences**
+
+- The microservices will need to be adapted to use Elasticsearch SQL, as it offers a limited feature set. 
 
 ##### Media Data
 
@@ -373,36 +392,10 @@ Based on the significantly larger data volume and the unstructured nature of med
     - **Data Organization:** Organizing media data using buckets and object names ensures efficient retrieval and management.
     - **Content Delivery:** Consider using Cloud CDN to optimize the delivery of media content to users around the world. 
 
-##### Search and Recomendations
-
-**Cloud Spanner's limitations**
-
-* Lacks specialized search features:
-    * Not optimized for full-text search, faceted navigation, or advanced result ranking.
-* Not designed for recommendations:
-    * Lacks built-in analytics and machine learning capabilities for personalized recommendations.
-
-**Elasticsearch is a good choice for search and recommendations**
-
-Elasticsearch, while powerful for search, can be complex to deploy and scale, requiring dedicated technical expertise. Elastic Cloud simplifies this by providing a managed service, allowing you to focus on leveraging Elasticsearch's advanced search capabilities, like full-text search, faceted navigation, and relevant result ranking, without the operational overhead.
-
-* **Specialized Search Capabilities:**
-    * Full-text Search: Efficiently handles searches across large product descriptions and details.
-    * Faceted Navigation: Allows users to refine searches by attributes like brand, color, size, etc.
-    * Relevant Result Ranking: Employs algorithms to prioritize the most relevant products in search results.
-
-* **Recommendation Engine:**
-    * Analytics & Machine Learning: Leverages user behavior and product data to generate personalized recommendations.
-
-* **Scalability:**
-    * Handles Large Catalogs: Efficiently indexes and searches through massive product catalogs.
-    * High Query Volumes: Accommodates numerous concurrent searches and recommendation requests.
-
-In summary: Elastic Cloud complements Cloud Spanner's transactional capabilities, creating a powerful combination for product-centric applications. 
 
 #### Multi Region aspects
 
-Cloud Spanner, Cloud Storage, and Elastic Cloud provide out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
+Cloud Storage, and Elastic Cloud provide out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
 
 ### Design
 
