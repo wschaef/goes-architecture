@@ -307,8 +307,6 @@ Domain Order remains on premise and is interated with other domains by REST APIs
 
 **Chosen Solution: Cloud Run**
 
-**Rationale**
-
 Cloud Run's alignment with the objectives of simplifying operations, improving scalability, and reducing costs makes it the preferred solution for migration. 
 
 * **Simplified Operations:** Cloud Run's fully managed environment and serverless execution model eliminate the need for infrastructure management, allowing for a focus on application development and faster deployment cycles. 
@@ -396,6 +394,15 @@ Based on the significantly larger data volume and the unstructured nature of med
 #### Multi Region aspects
 
 Cloud Storage, and Elastic Cloud provide out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
+
+#### Integration with domain Order
+
+Domain Order remains on premise and is intergated with other domains by REST APIs. The challenge there is to prevent customer data leakage into public cloud. 
+- **Elastic Cloud supports several mechanisms to obfuscate data privacy-relevant fields:**
+    - **Field-Level Security:** Restricts access to sensitive fields based on user roles and permissions.
+    - **Data Masking and Anonymization:** Transforms sensitive data before indexing, using techniques like hashing or encryption.
+    - **Pseudonymization:** Replaces identifying information with artificial identifiers to enable analysis while preserving privacy.
+    - **Aggregation and Reporting:** Allows deriving insights from data without exposing individual records or sensitive fields. 
 
 ### Design
 
