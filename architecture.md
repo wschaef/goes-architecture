@@ -468,6 +468,45 @@ Some aspects are omitted in this diagram but can be reviewed in the description 
 
 ![Domain Shop](img/DomainShop.drawio.svg) 
 
+## Domain Payment
+
+### Considerations
+
+Payment is already separated from the system. Integration via browser plug-in is an issue, as it creates an unnecessary barrier for user experience.
+
+There are two options for proceeding with Payment:
+
+- Improve and replace the browser plug-in integration using modern browser features.
+- Migrate Payment to GCP using Payment Gateway.
+
+Decision:
+Delay the migration to GCP because the current payment provider offers a mature and stable solution, and migrating to a new provider would require significant effort and risk, potentially disrupting the user experience. 
+
+## Domain Ticket System
+
+### Considerations
+
+**Assumption:** The GOES system currently utilizes an on-premises ticketing system.
+
+**Recommendation:** Migrate to a SaaS ticketing provider. 
+
+In the well-established realm of ticketing systems, SaaS solutions present a compelling alternative to traditional on-premise deployments, offering key advantages that align with modern business needs. 
+
+**Key Benefits of SaaS Ticketing:**
+
+* **Scalability & Agility:**  SaaS effortlessly accommodates growth and fluctuating demand, eliminating on-premise performance limitations.
+* **Reduced IT Overhead:** Offload maintenance, upgrades, and security to the provider, allowing IT to focus on strategic initiatives.
+* **Enhanced Accessibility & Collaboration:** Empower teams to provide support from anywhere, fostering seamless collaboration and responsiveness.
+* **Cost Predictability:**  Transparent subscription models enable better financial planning and eliminate unexpected infrastructure costs.
+
+**Leading SaaS Ticketing Providers:**
+
+* **Zendesk:** Comprehensive customer service platform with ticketing, live chat, and knowledge base. 
+* **Freshdesk:** User-friendly helpdesk solution with automation and collaboration features. 
+* **Jira Service Management:**  Extends Jira's capabilities for IT service management (ITSM) and customer support.
+* **ServiceNow:** Enterprise-grade platform for IT, customer, and employee service management.
+* **Zoho Desk:** Cost-effective helpdesk solution with integration into the Zoho ecosystem.
+
 # Deployment View
 
 ## Infrastructure Level 1
