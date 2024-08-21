@@ -394,7 +394,6 @@ Based on the significantly larger data volume and the unstructured nature of med
     - **Data Organization:** Organizing media data using buckets and object names ensures efficient retrieval and management.
     - **Content Delivery:** Consider using Cloud CDN to optimize the delivery of media content to users around the world. 
 
-
 #### Multi Region aspects
 
 Cloud Storage, and Elastic Cloud provide out-of-the-box multi-region setup. For deployment in a multi-region setup, follow the best practices recommended by these services. 
@@ -533,27 +532,19 @@ Some aspects are omitted in this diagram but can be reviewed in the description 
 
 #### Monitoring
 
-The Google Cloud integration collects and parses Google Cloud Audit Logs, VPC Flow Logs, Firewall Rules Logs and Cloud DNS Logs that have been exported from Cloud Logging to a Google Pub/Sub topic sink and collects Google Cloud metrics and metadata from Google Cloud Monitoring.
+**Problem Statement:**
 
-Google Cloud Platform Integration 
-Google Cloud Audit Logs
-VPC Flow Logs
-Firewall Rules Logs
-Cloud DNS Logs
-Google Cloud Platform (GCP) Cloud Run metrics
-Google Cloud Platform (GCP) Firewall logs
-Google Cloud Platform (GCP) Load Balancing metrics
-Google Cloud Platform (GCP) PubSub metrics
-Google Cloud Platform (GCP) Storage metrics
-Google Security Command Center
+Organizations with hybrid infrastructure face challenges in achieving unified monitoring and security due to the disparate nature of on-premise and cloud environments. This fragmentation hinders comprehensive visibility, impacting troubleshooting, capacity planning, proactive issue identification, and threat detection.
+
+Elastic Cloud offers a compelling solution by centralizing monitoring and security data from both environments, providing a single pane of glass for observability and threat detection. Its scalability, high availability, and managed service model ensure efficient monitoring and security that keeps pace with infrastructure growth. Seamless GCP integration further enhances its value in hybrid setups, enabling organizations to gain insights, troubleshoot, optimize performance, and detect and respond to security threats across their entire infrastructure. 
+
+Additionally, Elastic Cloud's security monitoring capabilities empower DevSecOps teams to proactively identify and address vulnerabilities, enhancing the overall security posture of the hybrid environment.
 
 ![Monitoring](img/DomainDevSecOps.drawio.svg)
 
 #### Development Platform
 
-Decision about to replace current Developer Platform depends on its maturity. 
-
-There are three options:
+There are three options for proceeding with the current Developer Platform: 
 
 **1. Improve current Developer Platform to work seamlessly with GCP**
 
