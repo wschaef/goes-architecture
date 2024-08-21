@@ -230,11 +230,9 @@ The Identity building block manages user authentication and authorization, allow
 ### Ticket System
 This building block provides a system for users to report issues and request support. It is used by Consumers and 1st Level Support.
 
-### SIEM
-The SIEM building block monitors security events, analyzes logs, and detects potential threats. It is used by the Security team.
+### DevSecOps Platform
+The DevSecOps Platform provides a unified environment for managing infrastructure, deploying applications, and integrating security measures throughout the software development lifecycle. 
 
-### DevOps Plattform
-This building block provides tools and automation for infrastructure management, application deployment, and continuous integration/delivery. It is used by the DevOps team. 
 
 ## High level view on hybrid cloud setup
 
@@ -530,6 +528,61 @@ M2M authentication and authorization can be enforced at the API Gateway.
 Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
 
 ![Domain IAM](img/DomainIAM.drawio.svg) 
+
+### DevSecOps Platform
+
+#### Monitoring
+
+The Google Cloud integration collects and parses Google Cloud Audit Logs, VPC Flow Logs, Firewall Rules Logs and Cloud DNS Logs that have been exported from Cloud Logging to a Google Pub/Sub topic sink and collects Google Cloud metrics and metadata from Google Cloud Monitoring.
+
+Google Cloud Platform Integration 
+Google Cloud Audit Logs
+VPC Flow Logs
+Firewall Rules Logs
+Cloud DNS Logs
+Google Cloud Platform (GCP) Cloud Run metrics
+Google Cloud Platform (GCP) Firewall logs
+Google Cloud Platform (GCP) Load Balancing metrics
+Google Cloud Platform (GCP) PubSub metrics
+Google Cloud Platform (GCP) Storage metrics
+Google Security Command Center
+
+![Monitoring](img/DomainDevSecOps.drawio.svg)
+
+#### Development Platform
+
+Decision about to replace current Developer Platform depends on its maturity. 
+
+There are three options:
+
+**1. Improve current Developer Platform to work seamlessly with GCP**
+
+This option requires less effort to adopt, but its suitability depends on the current maturity of the existing Developer Platform. 
+
+**2. Migrate to Google Cloud Developer Platform**
+
+Google Cloud provides a comprehensive developer platform that empowers developers to build, deploy, and manage applications and services on Google's scalable infrastructure. It offers a wide array of tools and services tailored to various development needs, including:
+
+- **Cloud Code**: An integrated development environment (IDE) plugin that simplifies the development and deployment of applications to Google Cloud.
+- **Cloud Shell**: A browser-based shell environment for managing Google Cloud resources and running command-line tools.
+- **Cloud Build**: A fully managed continuous integration and continuous delivery (CI/CD) platform for automating build, test, and deployment processes.
+- **Cloud Deploy**: A managed service for deploying applications to Google Kubernetes Engine (GKE) or Cloud Run.
+- **Artifact Registry**: A fully managed artifact repository for storing and managing build artifacts, such as container images and language packages. 
+  
+This option offers the best integration with GCP services, but requires additional manual effort to ensure compatibility with the on-premise environment. 
+
+**3. Migrate to an alternative**
+
+Here are the top 5 Developer Platforms, ranked by their suitability for a hybrid setup: 
+
+| Rank | Platform | Strengths | Considerations |
+|---|---|---|---|
+| 1 | GitLab | **Flexibility:** Handles diverse deployment targets on GCP and on-premise.<br>**Unified DevOps:** Offers a complete tool suite within one platform.<br>**Hybrid Cloud Support:** Features enable efficient management of hybrid environments.<br>**Elastic Integration:** Can be seamlessly integrated with Elastic Cloud for observability and security. | **Self-Hosting:** On-premise setup might require additional maintenance and expertise. |
+| 2 | Azure DevOps | **Strong CI/CD:** Robust pipeline capabilities for reliable deployments.<br>**Azure Integration:** Works seamlessly with Azure services.<br>**Hybrid Support:** Azure Arc facilitates on-premise resource management.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require additional configuration. | **Configuration:** More setup for on-premise deployments compared to GitLab.<br>**Microsoft Ecosystem:** Deeper integration with Microsoft tools. |
+| 3 | Jenkins | **Flexibility & Customization:** Open-source nature allows extensive tailoring to your hybrid setup and toolchain.<br>**Wide Integration:** Numerous plugins available, including for Elastic Cloud.<br>**Elastic Integration:** Can be easily integrated with Elastic Cloud for centralized logging and monitoring. | **Manual Setup:** Requires more configuration and maintenance compared to managed solutions.<br>**Steeper Learning Curve:** Might need more expertise to manage effectively. |
+| 4 | Harness | **Advanced CD:** Focuses on sophisticated deployment strategies, ideal for complex hybrid environments.<br>**Visibility:** Provides good insights into deployments and performance.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require custom configuration. | **Newer Platform:** Steeper learning curve compared to established options.<br>**Pricing:** Enterprise features can be costly. |
+| 5 | CircleCI | **Speed & Ease of Use:** Cloud-based platform known for fast builds and intuitive interface.<br>**Hybrid Support:** Self-hosted runners enable on-premise deployments.<br>**Elastic Integration:** Possible through custom scripts or third-party integrations. | **CI/CD Focused:** Primarily for build and deployment.<br>**Cost:** Can be more expensive at scale compared to self-hosted options.<br>**Elastic Integration:** Might require more effort compared to other platforms. |
+
 
 # Cross-cutting Concepts
 
