@@ -195,7 +195,7 @@ The system context diagram depicts the system's boundaries and its interactions 
 The solution strategy involves defining the target architecture, creating a migration path, and adopting the new architecture. 
 
 ## Migration approach
-
+/TODO
 
 # Building Block View
 
@@ -507,36 +507,29 @@ In the well-established realm of ticketing systems, SaaS solutions present a com
 * **ServiceNow:** Enterprise-grade platform for IT, customer, and employee service management.
 * **Zoho Desk:** Cost-effective helpdesk solution with integration into the Zoho ecosystem.
 
-# Deployment View
+## Domain IAM
 
-## Infrastructure Level 1
+### Considerations
 
-***\<Overview Diagram>***
+**Assumptions**
+- GOES company maintains an OpenID Connect compliant Identity Providers (IdP) to authenticate users.
+- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premise as well.
+- GOES consumers already use a 3rd party IdP to authenticate.
 
-Motivation  
-*\<explanation in text form>*
+**Migration vs On-premise**
+An OpenID Connect compliant Identity Provider is designed to be used outside of an intranet. The deployment of such an IdP is transparent to the workloads as long as the OAuth2 endpoints of the IdP are available. Based on the assumptions, there is no need for migration. 
+If scalability becomes an issue, then the B2C IdP can be migrated to GCP.
+B2B (=partners) and B2E (=employees) will remain on-premise. 
 
-Quality and/or Performance Features  
-*\<explanation in text form>*
+**Zero Trust**
+One of the pillars of the Zero Trust approach is to validate the user identity at every component in the infrastructure. On GCP, Identity-Aware Proxy provides a service that can intercept requests to workloads deployed on GKE or Cloud Run and validate the user identity. 
+M2M authentication and authorization can be enforced at the API Gateway. 
 
-Mapping of Building Blocks to Infrastructure  
-*\<description of the mapping>*
+### Design
 
-## Infrastructure Level 2
+Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
 
-### *\<Infrastructure Element 1>*
-
-*\<diagram + explanation>*
-
-### *\<Infrastructure Element 2>*
-
-*\<diagram + explanation>*
-
-…
-
-### *\<Infrastructure Element n>*
-
-*\<diagram + explanation>*
+![Domain IAM](img/DomainIAM.drawio.svg) 
 
 # Cross-cutting Concepts
 
@@ -556,20 +549,9 @@ Mapping of Building Blocks to Infrastructure
 
 # Architecture Decisions
 
-# Quality Requirements
-
-## Quality Tree
-
-## Quality Scenarios
-
 # Risks and Technical Debts
 
 # Glossary
-
-| Term        | Definition        |
-|-------------|-------------------|
-| *\<Term-1>* | *\<definition-1>* |
-| *\<Term-2>* | *\<definition-2>* |
 
 # References
 * Arc42 Template Created, maintained and © by Dr. Peter Hruschka, Dr. Gernot Starke and
