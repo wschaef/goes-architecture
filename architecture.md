@@ -1,10 +1,10 @@
 # Introduction and Goals
-
-
+This document is intended to be used during a system design interview for a given challenge. It serves as a template to guide the discussion and showcase my understanding of architectural principles and best practices. 
 
 [Input Document](./input1.md) 
 
-
+This document does not cover all aspects of architecture design, focusing primarily on the requested topics. 
+In order to go into details, I had to make assumptions and prioritize certain aspects of the architecture. These assumptions are documented in the "Assumptions" section and will be revisited during the design process. 
 
 ## Requirements Overview
 
