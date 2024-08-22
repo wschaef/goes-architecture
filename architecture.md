@@ -1,5 +1,11 @@
 # Introduction and Goals
 
+
+
+[Input Document](./input1.md) 
+
+
+
 ## Requirements Overview
 
 ### Functional Requirements:
@@ -97,7 +103,6 @@
 | Log and Monitoring Data | 18 TB | 600GB | 5GB | Assuming 10KB logs per user per day, 100 GB server logs per day, and 1% of logs are accessed for analysis. 30-day retention. |
 
 - The gross storage requirement is significantly higher than the net storage requirement due to redundancy and overhead.
-
 
 ## Stakeholders
 
@@ -238,7 +243,63 @@ The DevSecOps Platform provides a unified environment for managing infrastructur
 
 ### Considerations
 
-/TODO
+### VPC, Regions, Zones
+
+* **Single VPC:** A single VPC will be created in GCP to ensure centralized network management and control for all cloud resources.
+* **Two Regions:** 
+    * **US Region:** A region on the US East Coast, geographically close to the existing US on-premise data center. (Example: `us-east1`)
+    * **Europe Region:** A region in Western Europe, geographically close to the existing European on-premise data center. (Example: `europe-west1`)
+    * **Optional:** Additional regions can be considered for future expansion or specific business needs.
+* **Zones:** Each region will have at least two zones for high availability and fault tolerance.
+
+### Hybrid Setup
+
+#### Network Setup
+
+* **High-Level View:** The network setup will focus on establishing secure and performant connectivity between the on-premise data centers and the GCP VPC, while also providing efficient traffic routing and content delivery.
+
+* **Cloud Interconnect:** 
+    * **Dedicated Interconnect:** Dedicated Interconnect will be used in each region to provide stable and high-bandwidth (10Gbps or 100Gbps) connectivity between the on-premise data centers and the GCP VPC. This ensures low latency and high throughput for critical workloads.
+    * **Redundancy:** Multiple Dedicated Interconnect connections can be established for redundancy and increased availability.
+
+* **Subnet Design:**
+    * **Public Subnets:** Public subnets will be created in each region to host internet-facing resources such as web servers, load balancers, and Cloud CDN edge nodes.
+    * **Private Subnets:** Private subnets will be created in each region to host backend services like APIs, databases, and application servers. These subnets will not have direct internet access, enhancing security.
+
+* **Load Balancing:**
+    * **Cloud DNS (Geolocation-based):** Cloud DNS will be the primary mechanism for distributing traffic across regions based on the user's geographical location.
+    * **Regional Load Balancers:** Regional Load Balancers (e.g., Internal TCP/UDP Load Balancer, Network Load Balancer) will be used within each region to distribute traffic across instances within that region once Cloud DNS has directed the user there.
+
+* **Cloud DNS:** 
+    * **External DNS:** Cloud DNS will manage external DNS records, allowing users to access resources using custom domain names. 
+    * **Internal DNS:** Cloud DNS can also be used for internal DNS resolution within the VPC, enabling seamless communication between resources across different subnets and regions.
+
+* **Cloud CDN:** Cloud CDN will be used to cache static and dynamic content at edge locations around the world, reducing latency and improving performance for end users.
+
+#### API Gateway Mesh
+
+* **Apigee Hybrid:** Apigee Hybrid will be used to deploy API Gateway instances both on-premise and in GCP.
+* **Mesh Setup:** Apigee Hybrid's mesh functionality will establish secure communication and unified management across the on-premise and cloud API Gateway instances. 
+* **Benefits:** This hybrid mesh setup provides flexibility in API deployment, allowing for gradual migration of APIs from on-premise to the cloud while maintaining a consistent experience for API consumers.
+
+#### Security
+
+* **Cloud Armor:** Cloud Armor will be deployed in front of the internet-facing resources in the public subnets to protect against DDoS attacks, SQL injection, cross-site scripting (XSS), and other common web application vulnerabilities. 
+* **Identity-Aware Proxy (IAP):** IAP will be used to control access to internal applications and resources hosted in the private subnets. IAP enables fine-grained access control based on user identity and context, eliminating the need for a traditional VPN.
+* **Virtual Private Cloud (VPC) Firewall:** VPC Firewall rules will be configured to control traffic flow between different subnets and resources within the VPC. 
+* **Identity and Access Management (IAM):** IAM will be used to manage user access and permissions to GCP resources. 
+* **Security Command Center:** Security Command Center can be used for centralized security monitoring, threat detection, and compliance management across the hybrid environment.
+
+* **Security Groups:** Security groups can provide additional layer of network security by controlling traffic at the instance level.
+* **Data Encryption:** Data at rest and in transit should be encrypted using appropriate mechanisms.
+
+#### Non-Prod Environments 
+
+Non-prod environments are not in scope for this document. However, from a high-level perspective, non-prod environments can be set up similarly to the production environment, with the following key distinctions:
+
+- **Resource Allocation:**  Non-prod environments will typically have a smaller allocation of resources (e.g., compute instances, storage) compared to the production environment.
+- **Isolation:**  Non-prod environments should be isolated from the production environment to prevent accidental data corruption or security breaches. This can be achieved through network segmentation, separate databases, or other isolation mechanisms. 
+- **Access Control:**  Access to resources in non-prod environments should be less restrictive than in the production environment, allowing for direct access by DevOps for development and testing purposes. This ensures flexibility and agility during the development lifecycle. 
 
 ### Design
 
