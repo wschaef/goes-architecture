@@ -8,46 +8,64 @@ In order to go into details, I had to make assumptions and prioritize certain as
 
 ## Requirements Overview
 
+### Assumptions:
+
+#### Assumptions on numbers
+- **Scope:** E-commerce is fucused on streaming products.
+- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
+- **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
+- **Content Library:** The company has about 10,000 hours of content in its content library of on-demand video and audio content, distributed as follows: 5% SD, 70% HD, and 25% 4K. 
+- **Products** The company has about 10,000 products with 1% daily product updates.
+
+#### Assumptions on current architecture
+- The current architecture utilizes containers for microservices deployed on-premises.
+- GOES company maintains an OpenID Connect compliant Identity Providers (IdP) to authenticate users.
+- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premise as well.
+- GOES consumers already use a 3rd party IdP to authenticate.
+
+The exact numbers for non-functional requirements are assumptions too.
+
 ### Functional Requirements:
 
-- **Cloud Migration:**
-    - Migrate at least 90% of the company's existing on-premises applications and infrastructure to a hybrid cloud environment within 24 months.
-    - Migrate the core e-commerce platform, including the website, order processing system, and payment gateway, to the cloud within the first 12 months.
-    - Migrate the existing content library, including on-demand videos and audio content, to cloud-based storage within 9 months.
-- **Hybrid Environment Support:**
-    - Ensure seamless interaction and interoperability between on-premises and cloud-based components, with a latency not exceeding 100ms for 99% of transactions.
-    - Establish secure and reliable communication channels (e.g., VPN, dedicated connections) between on-premises and cloud environments.
-- **Data Management:**
-    - Handle a daily data ingestion rate of at least 10TB, including user data, system logs, and content metadata.
-    - Ensure data recovery time objective (RTO) of less than 4 hours in case of failure.
-    - Maintain a data recovery point objective (RPO) of less than 24 hours.
-    - Support efficient storage and delivery of large media files (videos, audio).
-    - Handle various streaming protocols, including HLS and DASH, for adaptive streaming across different devices and network conditions.
-- **Scalability:**
-    - Handle a peak load of 100,000 concurrent users with an average response time of less than 2 seconds.
-    - Automatically scale resources up or down based on real-time traffic patterns.
-    - Handle spikes in bandwidth consumption during popular content releases or live events, ensuring uninterrupted streaming for all users.
+- **E-commerce Platform:**
+    - Maintain the existing feature set from the previous system and extend it with new features. 
+- **Content Streaming:**
+    - Maintain the existing feature set from the previous system and extend it with new features.
+    - Develop native apps for mobile devices and smart TVs.
+- **Payment:**
+    - Modernize payment processes to align with industry best practices.
+    - Eliminate the requirement for browser plugins.
+- **Identity and Access Management (IAM):**
+    -Implement Single-Sign-On (SSO) across both on-premise and cloud environments. 
+- **Hybrid Environment:**
+    - Establish reliable data synchronization between the on-premises and cloud environments.
+    - Implement secure and high-bandwidth connectivity between the on-premises and cloud environments (e.g., VPN, Direct Connect).
+    - Ensure seamless communication and interoperability between applications deployed in both on-premises and cloud environments.
+    - Establish end-to-end observability across both environments. 
 - **Security:**
-    - Encrypt all sensitive customer data, including personal information and payment details, both in transit and at rest.
-    - Conduct regular security audits and penetration testing to identify and address vulnerabilities.
-    - Ensure compliance with relevant security standards, such as PCI DSS for payment processing and ISO 27001 for information security.
-    - Implement measures to prevent unauthorized access and distribution of copyrighted content using Digital Rights Management (DRM) technologies. 
+    - Implement robust security measures to protect sensitive customer data (e.g., encryption, access control, SIEM).
+    - Ensure compliance with relevant data privacy regulations (e.g., GDPR, CCPA).
+    - Migrate user roles and permissions from the on-premises system to the cloud.
+    - Implement granular access control to cloud resources based on user roles and permissions. 
 
 ### Non-Functional Requirements:
 
+*The exact numbers for non-functional requirements are assumptions*
+
 - **Performance:**
-    - Maintain system availability of at least 99.99% (less than 53 minutes of downtime per year).
+    - Maintain system availability of at least 99.95% (less than 4 hours and 23 minutes per year).
     - Ensure an average response time for user requests under 2 seconds under normal load conditions.
     - Achieve low latency streaming with a target latency under 5 seconds for live streams and under 3 seconds for on-demand content.
     - Maintain high video and audio quality across different devices and network conditions, adapting to varying bandwidth availability.
 - **Scalability:**
     - Scale horizontally to accommodate a 100% increase in the user base and data volume within 1 month.
     - Dynamically scale bandwidth capacity to meet fluctuating demand, especially during peak hours and special events.
+    - Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
 - **Cost-Effectiveness:**
     - Reduce the total cost of ownership (TCO) of the hybrid cloud environment by at least 15% compared to the current on-premises infrastructure within 3 years.
     - Implement cost optimization strategies for media storage and delivery, such as using different storage tiers based on content popularity and leveraging CDN caching.
 - **Security:**
-    - Ensure no unauthorized access to sensitive data is detected within a 12-month period.
+    - Ensure no unauthorized access to sensitive data is detected within a 1-month period.
     - Implement robust authentication and authorization mechanisms to protect user accounts and content.
 - **Maintainability:**
     - Deploy new features or updates to the system within 2 weeks.
@@ -55,14 +73,9 @@ In order to go into details, I had to make assumptions and prioritize certain as
 - **Flexibility:**
     - Support the integration of new technologies and services within 3 months.
     - Adapt to new streaming technologies and formats as they emerge, ensuring compatibility with evolving industry standards. 
-
-### Assumptions:
-
-- **Scope:** E-commerce is fucused on streaming products
-- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
-- **Peak Load:** Peak load during holiday seasons or special events can result in a 5x increase in traffic compared to normal conditions.
-- **Content Library:** The company has about 10,000 hours of content in its content library of on-demand video and audio content, distributed as follows: 5% SD, 70% HD, and 25% 4K. 
-- **Products** The company has about 10,000 products
+- **Data recovery**
+    - Ensure data recovery time objective (RTO) of less than 4 hours in case of failure.
+    - Maintain a data recovery point objective (RPO) of less than 24 hours.
 
 ### Additional conciderations
 
@@ -85,7 +98,7 @@ In order to go into details, I had to make assumptions and prioritize certain as
 | Data Domain | Public Cloud Storage | Explanation |
 |---|---|---|
 | Customer Data |  No | GDPR allows for the transfer of personal data outside the EU, but only under specific conditions. These conditions include ensuring adequate safeguards are in place to protect the data, and the data processor (e.g., the cloud provider) must comply with GDPR regulations. |
-| Transactional Data | Yes |  Transactional data may contain information that can be linked back to individuals.  Appropriate anonymization and encryption techniques can be implemented to ensure compliance with GDPR when storing this data on the public cloud. | 
+| Transactional Data | Partial |  Transactional data may contain information that can be linked back to individuals.  Appropriate anonymization and encryption techniques can be implemented to ensure compliance with GDPR when storing this data on the public cloud. | 
 | Product Data | Yes | This data generally does not contain personal information and is less sensitive to GDPR regulations. However, if product reviews contain personally identifiable information, that would need to be considered. |
 | Streaming Data | Yes | Streaming data related to user viewing habits can be anonymized or aggregated to avoid direct identification of individuals. This data can be stored in the public cloud, but it's important to ensure appropriate security measures are in place. |
 | Log and Monitoring Data | Yes | Logs and metrics related to system performance and security events are generally not considered personal data. However, if these logs contain information that can be linked back to individuals, GDPR compliance needs to be assessed. | 
@@ -502,7 +515,7 @@ While GKE offers greater flexibility and control, it also introduces additional 
 
 #### Database
 
-**Asumptions**:
+**Assumptions**:
 - 10.000 products
 - 1% daily product updates -> 100 product updates per day
 - 20 product views per user per day for 50 millions users
