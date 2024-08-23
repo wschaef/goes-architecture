@@ -272,9 +272,11 @@ Some ot theese aspects are designed in **GCP Landing zone - High level view on h
 
 API mesh streamlines cloud migration by decoupling APIs from their implementation, allowing incremental migration without consumer refactoring. It provides dynamic traffic routing for gradual shifts, observability for issue detection, and consistent security across hybrid environments. This ensures a seamless transition with minimal disruption.
 
-#### 3. Setup IAM domain
+#### 3 Adopt DevSecOps platform
 
-Proper setup of the IAM domain is the prerequisite for migration of all other domains. 
+A clear and well-defined DevSecOps platform is crucial for teams working in a hybrid environment.  A poor DevSecOps experience can quickly impact the development velocity and overall efficiency of the project. 
+
+Establishing end-to-end monitoring is crucial for a successful migration. It provides valuable insights to guide decision-making throughout the process. Key performance indicators (KPIs) such as stability, load and performance, security and compliance serve as input for determining the migration speed and planning subsequent stages. 
 
 #### 4. Implement a PoC for migration
 
@@ -311,35 +313,17 @@ Motivation
 
 ![Whitebox View of Overall System](img/Container.drawio.svg)
 
-### Streaming
-This building block is responsible for the delivery of video and audio content to consumers. It handles tasks like encoding, transcoding, and streaming protocols. It is used by both Consumers and Content Managers. 
-
-### Shop
-The Shop building block manages the e-commerce aspects of the system, including product listings, purchase transactions, and order fulfillment. It is used by both Consumers and Content Managers.
-
-## Order
-This building block manages the order process, including order creation, fulfillment, and tracking. It is used by the Shop building block. 
-
-### Product
-This building block stores and manages product information, including metadata, pricing, and inventory. It is used by the Shop building block.
-
-### Customer
-The Customer building block stores and manages user information, including account details, preferences, and purchase history. It is used by the Shop and Streaming building blocks.
-
-### Payment
-This building block handles financial transactions, including payment processing and fraud detection. It is used by the Shop building block.
-
-### IAM *(Identity and Access Management)*
-The Identity building block manages user authentication and authorization, allowing users to log in and access system resources. It is used by all building blocks.
-
-### Ticket System
-This building block provides a system for users to report issues and request support. It is used by Consumers and 1st Level Support.
-
-### DevSecOps Platform
-The DevSecOps Platform provides a unified environment for managing infrastructure, deploying applications, and integrating security measures throughout the software development lifecycle. 
-
-
-## GCP Landing zone - High level view on hybrid cloud setup
+- **Streaming:** This building block is responsible for the delivery of video and audio content to consumers. It handles tasks like encoding, transcoding, and streaming protocols. 
+- **Shop:** The Shop building block manages the e-commerce aspects of the system, including product listings, purchase transactions, and order fulfillment.
+- **Order:** This building block manages the order process, including order creation, fulfillment, and tracking.  
+- **Product:** This building block stores and manages product information, including metadata, pricing, and inventory.
+- **Customer:** The Customer building block stores and manages user information, including account details, preferences, and purchase history. 
+- **Payment:** This building block handles financial transactions, including payment processing and fraud detection. 
+- **IAM *(Identity and Access Management)*:** The Identity building block manages user authentication and authorization, allowing users to log in and access system resources. 
+- **Ticket System:** This building block provides a system for users to report issues and request support. 
+- **DevSecOps Platform:** The DevSecOps Platform provides a unified environment for managing infrastructure, deploying applications, and integrating security measures throughout the software development lifecycle. 
+ 
+## Landing zone - High level view on hybrid cloud setup
 
 ### Considerations
 
@@ -375,6 +359,42 @@ The DevSecOps Platform provides a unified environment for managing infrastructur
     * **Internal DNS:** Cloud DNS can also be used for internal DNS resolution within the VPC, enabling seamless communication between resources across different subnets and regions.
 
 * **Cloud CDN:** Cloud CDN will be used to cache static and dynamic content at edge locations around the world, reducing latency and improving performance for end users.
+
+#### Data recovery
+
+In a hybrid setup with stringent RTO (<4 hours) and RPO (<24 hours) requirements, data recovery on the GCP side warrants careful attention to the following strategies, tailored to the specific services in use - Cloud SQL, Firestore, Cloud Storage, and Media CDN:
+
+Cloud SQL
+
+* **Automated backups:** Ensure that automated backups are enabled with a frequency that aligns with the RPO, potentially hourly or even more frequently.
+* **Regional replicas:** Consider deploying replicas in a different region within the same multi-region VPC to enable faster failover and recovery should a regional outage occur.
+* **Point-in-time recovery:** Leverage this feature to restore the database to a specific point in time within the backup retention period. 
+
+Firestore
+
+* **Multi-region deployment:** Opt for a multi-region deployment of Firestore to achieve high availability and automatic failover in the event of regional disruptions. 
+* **Data exports:** Regularly export Firestore data to Cloud Storage to create additional backup and recovery options.
+* **Point-in-time recovery:** Utilize the built-in point-in-time recovery feature to restore data to a specific point in the past. 
+
+Cloud Storage
+
+* **Object Versioning:** Enabling versioning is recommended to preserve previous versions of objects, providing a safety net against accidental deletions or overwrites.
+* **Cross-region replication:** Consider replicating critical data to a bucket in a different region for added durability and faster recovery in case of a regional outage.
+* **Lifecycle management:** Implementing lifecycle policies can automatically transition objects to lower-cost storage classes (like Coldline or Archive) for long-term retention and cost optimization.
+
+Media CDN
+
+* **Origin redundancy:** Configuring multiple origins (such as Cloud Storage buckets in different regions) helps ensure content availability even if one origin becomes unavailable.
+* **Cache invalidation:** Implement mechanisms to invalidate cache content quickly in case of updates or errors to ensure users receive the latest versions. 
+
+Additional Considerations
+
+* **Monitoring and Alerting:** Comprehensive monitoring and alerting should be implemented to promptly detect failures or performance degradation in any of the GCP services.
+* **Automated Recovery:** Develop and test automated recovery workflows to minimize manual intervention and ensure timely recovery within the RTO. 
+* **Regular Testing:** Periodic disaster recovery drills are vital to validate the effectiveness of the recovery strategies and identify areas for improvement. 
+
+By harnessing the inherent capabilities of these GCP services and implementing robust recovery mechanisms, organizations can achieve the desired RTO and RPO even in the face of unexpected disruptions. Continuous monitoring, testing, and refinement of the recovery strategy are crucial to ensuring data protection and business continuity in the hybrid environment. 
+
 
 #### API Gateway Mesh
 
