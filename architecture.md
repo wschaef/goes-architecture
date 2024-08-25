@@ -125,79 +125,26 @@ The current architecture comprises two data centers, one in America and one in E
 
 ## Business Context
 
-### Use Cases: Consumer
-
-1. **Watch Content:** Stream video or audio content on demand or live, including selecting playback quality, subtitles, and audio tracks.
-2. **Browse Content:** Discover and explore available content (e.g., movies, TV shows, documentaries, live events) based on genre, popularity, recommendations, or search.
-3. **Resume Playback:** Continue watching content from where it was last paused.
-4. **Login:** Authenticate user credentials (username/email and password) against the system. 
-5. **Create Account:** Register for an account to access personalized features, manage subscriptions, and save watchlists.
-6. **Cast to Devices:** Stream content to various devices (e.g., TV, mobile, tablet) using Chromecast or similar technologies.
-7. **Purchase Content:** Buy access to premium content, individual episodes, or subscription packages. 
-8. **Save Watchlist:** Add content to a watchlist for later viewing.
-9. **Manage Profile:** Update personal information, payment details, and subscription plans.
-10. **Rate and Review Content:** Provide feedback on content by rating or writing reviews.
-11. **Contact Support:** Get assistance with technical issues, account management, or billing. 
-
-### Use Cases: Content Manager
-
-1. **Login** | Authenticate user credentials (username/email and password) against the system.
-2. **Upload and Manage Content** | Upload new video and audio content to the system, including metadata (title, description, genre, tags, etc.). 
-3. **Edit Content Metadata** | Modify existing content metadata, such as title, description, genre, tags, and release date. 
-4. **Organize Content Library** | Create and manage content categories, playlists, and collections to organize the content library. 
-5. **Set Content Visibility and Availability** | Control the visibility and availability of content based on region, subscription plans, and other criteria. 
-6. **Manage Content Rights** | Assign and manage content rights, including copyright information, licensing agreements, and distribution permissions. 
-7. **Monitor Content Performance** | Track content views, engagement metrics (e.g., watch time, completion rate), and user feedback (ratings, reviews). 
-8. **Optimize Content Delivery** | Optimize content delivery by adjusting streaming settings, encoding parameters, and CDN configurations. 
-9. **Manage User Subscriptions** | Create and manage subscription plans, including pricing, content access levels, and promotional offers. 
-10. **Generate Content Reports** | Generate reports on content performance, user engagement, and subscription trends. 
-
-### Use Cases: 1st Level Support
-
-1. **Account Management:** Reset passwords, update account information, manage subscriptions.
-2. **Technical Support:** Troubleshoot login issues, streaming problems, device compatibility.
-3. **Billing Inquiries:** Address billing questions, payment issues, and subscription changes.
-4. **Content Issues:** Report broken links, missing content, or technical problems with content playback.
-5. **Escalation:**  Identify and escalate complex issues to higher-level support teams. 
-
-### Use Cases: DevOps
-
-1. **Infrastructure Provisioning:**  Deploy and manage the cloud infrastructure (e.g., virtual machines, storage, networking) required for the system.
-2. **Application Deployment:**  Automate the deployment of applications, services, and configurations to the cloud environment.
-3. **Monitoring and Logging:**  Set up and maintain monitoring tools to track system performance, identify issues, and generate alerts.
-4. **Security Management:** Implement and manage security measures, including access control, vulnerability scanning, and intrusion detection.
-5. **Continuous Integration and Delivery (CI/CD):**  Establish CI/CD pipelines to automate code builds, testing, and deployment.
-6. **Capacity Planning and Scaling:**  Monitor resource utilization and adjust capacity to meet changing demands.
-7. **Troubleshooting and Incident Management:**  Respond to system failures, troubleshoot issues, and restore service.
-8. **Cost Optimization:**  Identify and implement strategies to reduce cloud infrastructure costs.
-
-### Use Cases: Security
-
-1. **Monitor Security Events:** Analyze security logs and alerts for suspicious activity.
-2. **Investigate Security Incidents:**  Identify the root cause of security incidents and determine the impact.
-3. **Tune SIEM Rules:** Adjust SIEM rules to improve detection accuracy and reduce false positives.
-4. **Develop Security Reports:** Create reports on security trends, vulnerabilities, and incident response.
-5. **Collaborate with Security Teams:**  Work with other security teams to share information and coordinate incident response. 
-6. **Maintain SIEM Infrastructure:** Ensure the SIEM system is functioning properly and is up to date. 
+Some use cases are documented in the [Use Cases](UseCases.md) document. While the list of use cases is not exhaustive, it served as a valuable starting point for understanding the system's functionality and identifying key user interactions. 
 
 ## Technical Context
 
 The system context diagram depicts the system's boundaries and its interactions with external entities, including users, external systems, and other relevant stakeholders. It provides a high-level overview of the system's scope and its relationships with the outside world. (following the C4 model level 1) 
 
-<!-- Suggested code may be subject to a license. Learn more: ~LicenseLog:3960891731. -->
-![System Context](img/Context.drawio.svg)]
+![System Context](img/Context.drawio.svg)
 
 ### Persons
-- Consumer - A person who uses the system to access content or services.
-- Content Manager - A person responsible for creating, editing, and managing the content within the system.
-- DevOps - A person or team responsible for the deployment and maintenance of the system's infrastructure and applications.
-- Security -  A person or team responsible for ensuring the confidentiality, integrity, and availability of the system.
-- 1st Level Support - A person or team providing initial technical support to users of the system.
+- **Consumer:** A person who uses the system to access content or services.
+- **Content Manager:** A person responsible for creating, editing, and managing the content within the system.
+- **DevOps:** A person or team responsible for the deployment and maintenance of the system's infrastructure and applications.
+- **Security:** A person or team responsible for ensuring the confidentiality, integrity, and availability of the system.
+- **1st Level Support:** A person or team providing initial technical support to users of the system. 
+
 
 ### External systems
-- Content Provider - A third-party service that provides media content to the system.
-- Payment Provider - A third-party service that handles financial transactions for the system (e.g., processing payments from consumers).
-- external IdP (3rd party IdP) - A third-party service that manages user identities and authentication for the system (e.g., allowing users to log in with their Google, Facebook, or other existing accounts).
+- **Content Provider:** A third-party service that provides media content to the system.
+- **Payment Provider:** A third-party service that handles financial transactions for the system (e.g., processing payments from consumers).
+- **external IdP (3rd party IdP):** A third-party service that manages user identities and authentication for the system (e.g., allowing users to log in with their Google, Facebook, or other existing accounts).
 
 # Solution Strategy
 
@@ -240,8 +187,8 @@ Despite these challenges, adopting a hybrid model can bring significant benefits
 
 [ADR Select Migration Approach](./adrs/adr03-MigrationApproach.md) is an Architectural Decision Record (ADR) that explores different approaches to migrating an existing application called GOES to the cloud. It outlines four main options:
 
+- **Migrate to SaaS**: Use E-Commerce and Streaming SaaS offerings and migrate the data there.
 - **Rehost**: Lift and shift the application to a virtual machine in the cloud.
-- **Replatform**: Move the application to the cloud with minimal changes, potentially leveraging some cloud-native services (like managed databases).
 - **Migrate and improve**: Migrate existing containerized applications and improve the architecture using cloud-native services.
 - **Modernize**: Completely re-architect the application to be cloud-native, using higher-level cloud services. 
 
