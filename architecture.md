@@ -20,7 +20,7 @@ In order to go into details, I had to make assumptions and prioritize certain as
 #### Assumptions on current architecture
 - The current architecture utilizes containers for microservices deployed on-premises.
 - GOES company maintains an OpenID Connect compliant Identity Providers (IdP) to authenticate users.
-- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premise as well.
+- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premises as well.
 - GOES consumers already use a 3rd party IdP to authenticate.
 
 The exact numbers for non-functional requirements are assumptions too.
@@ -36,7 +36,7 @@ The exact numbers for non-functional requirements are assumptions too.
     - Modernize payment processes to align with industry best practices.
     - Eliminate the requirement for browser plugins.
 - **Identity and Access Management (IAM):**
-    - Implement Single-Sign-On (SSO) across both on-premise and cloud environments. 
+    - Implement Single-Sign-On (SSO) across both on-premises and cloud environments. 
 - **Hybrid Environment:**
     - Establish reliable data synchronization between the on-premises and cloud environments.
     - Implement secure and high-bandwidth connectivity between the on-premises and cloud environments (e.g., VPN, Direct Connect).
@@ -104,15 +104,16 @@ The exact numbers for non-functional requirements are assumptions too.
 
 > **Guideline - Technical reference to user:** A unique, anonymized identifier (e.g., a UUID) can be stored in the public cloud to reference a user. This identifier should only be linked to personal information in the on-premises systems, not in the public cloud. 
 
-The decision about structuring the GOES architecture into domains and choosing the target platform (on-premise or cloud) for each domain is documented here: 
+The decision about structuring the GOES architecture into domains and choosing the target platform (on-premises or cloud) for each domain is documented here: 
 - [ADR Mapping of domain to public cloud vs on-premise](./adrs/adr01-DomainsMapping.md)
 
 ## Stakeholders
 
-1. Application Stack developer
-2. Enterprise Architect
-3. VP Engineering
-4. A Business Person of the solution internal to our company
+- Application Stack developer
+- Enterprise Architect
+- VP Engineering
+- A Business Person of the solution internal to our company
+
 
 # Architecture Constraints
 
@@ -210,30 +211,30 @@ The decision to choose GCP as the target public cloud provider is documented her
 
 - [ADR Select public cloud provider](./adrs/adr02-PublicCloudProvider.md)
 
-### Challenges of Migrating from On-Premise to Hybrid (On-Premise + GCP)
+### Challenges of Migrating from on-premises to Hybrid (on-premises + GCP)
 
-Migrating from a purely on-premise infrastructure to a hybrid model that incorporates Google Cloud Platform (GCP) can present several complex challenges:
+Migrating from a purely on-premises infrastructure to a hybrid model that incorporates Google Cloud Platform (GCP) can present several complex challenges:
 
 **Technical Challenges:**
 
-* **Application Compatibility:** Existing on-premise applications might not be designed for cloud environments, requiring refactoring or rearchitecting to ensure they function correctly and efficiently on GCP.
+* **Application Compatibility:** Existing on-premises applications might not be designed for cloud environments, requiring refactoring or rearchitecting to ensure they function correctly and efficiently on GCP.
 * **Data Migration Complexity:** Moving large volumes of data to the cloud can be time-consuming and prone to errors. Ensuring data integrity and minimizing downtime during migration are critical considerations.
-* **Network Connectivity and Security:** Establishing secure and reliable connectivity between on-premise and cloud environments can be intricate. Configuring firewalls, VPNs, and addressing latency concerns are vital for a smooth hybrid setup.
+* **Network Connectivity and Security:** Establishing secure and reliable connectivity between on-premises and cloud environments can be intricate. Configuring firewalls, VPNs, and addressing latency concerns are vital for a smooth hybrid setup.
 * **Skill Gaps:** IT team might require upskilling or additional expertise in cloud technologies and GCP-specific tools to manage the hybrid infrastructure effectively.
 
 **Operational Challenges:**
 
 * **Cost Management:** While the cloud offers scalability and potential cost savings, it's crucial to monitor and optimize resource usage to avoid unexpected expenses.
-* **Hybrid Management Complexity:** Managing a hybrid infrastructure introduces increased complexity as company needs to coordinate operations and maintain consistency across both on-premise and cloud environments.
+* **Hybrid Management Complexity:** Managing a hybrid infrastructure introduces increased complexity as company needs to coordinate operations and maintain consistency across both on-premises and cloud environments.
 * **Change Management:** Migrating to a hybrid model can disrupt existing workflows and processes. Clear communication and change management strategies are essential to ensure a smooth transition for team.
 * **Vendor Lock-In Concerns:** While GCP offers numerous benefits, relying heavily on a single cloud provider might create concerns about vendor lock-in and potential future limitations.
 
 **Strategic Challenges:**
 
-* **Defining the Right Hybrid Strategy:** Determining which workloads to migrate to the cloud and which to keep on-premise requires careful planning and alignment with  business goals.
-* **Data Governance and Compliance:** Managing data across on-premise and cloud environments requires adherence to data privacy regulations and maintaining strict data governance policies.
+* **Defining the Right Hybrid Strategy:** Determining which workloads to migrate to the cloud and which to keep on-premises requires careful planning and alignment with  business goals.
+* **Data Governance and Compliance:** Managing data across on-premises and cloud environments requires adherence to data privacy regulations and maintaining strict data governance policies.
 
-Despite these challenges, adopting a hybrid model can bring significant benefits like improved scalability, flexibility, and access to advanced cloud services. Careful planning, addressing these challenges proactively, and selecting the right migration strategy are key to a successful transition to a hybrid on-premise + GCP infrastructure.
+Despite these challenges, adopting a hybrid model can bring significant benefits like improved scalability, flexibility, and access to advanced cloud services. Careful planning, addressing these challenges proactively, and selecting the right migration strategy are key to a successful transition to a hybrid on-premises + GCP infrastructure.
 
 ### Proposed approach
 
@@ -250,12 +251,12 @@ Despite these challenges, adopting a hybrid model can bring significant benefits
 
 * **User and Group Management:** Establishing mechanisms to manage user accounts, groups, and their associated permissions within the cloud environment.
 * **Authentication and Authorization:** Implementing secure authentication methods (like multi-factor authentication) and defining granular access controls to cloud resources based on roles and responsibilities.
-* **Federation and Single Sign-On (SSO):** Integration with existing on-premise identity systems to provide seamless access and unified user management across hybrid environments.
+* **Federation and Single Sign-On (SSO):** Integration with existing on-premises identity systems to provide seamless access and unified user management across hybrid environments.
 
 **2. Network Architecture:**
 
 * **Virtual Private Cloud (VPC) and Subnet Design:** Defining the structure and segmentation of the cloud network to ensure isolation and security for different workloads.
-* **Connectivity:** Establishing secure connections between on-premise networks and the cloud environment using technologies like VPNs or dedicated interconnects.
+* **Connectivity:** Establishing secure connections between on-premises networks and the cloud environment using technologies like VPNs or dedicated interconnects.
 * **Load Balancing and Traffic Management:** Implementing load balancers to distribute traffic efficiently across multiple resources and handle potential surges in demand.
 
 **3. Resource Organization and Hierarchy:**
@@ -308,15 +309,15 @@ There are two main criteria to prioritize domains for migration:
 
 Streaming domain is a good candidate, because of highest load and highest potential cost savings.
 
-Scalability of the remaining domains on-premise will be improved because migrating domains to the cloud frees up resources on-premise. This allows for a more efficient use of the remaining on-premise resources, potentially enabling better performance for the remaining domains. 
+Scalability of the remaining domains on-premises will be improved because migrating domains to the cloud frees up resources on-premise. This allows for a more efficient use of the remaining on-premises resources, potentially enabling better performance for the remaining domains. 
 
 ### Migration of data
 
-Google Cloud Platform (GCP) provides a suite of features designed to streamline the conversion and transfer of large datasets from on-premise environments, even enabling database transformations during migration: 
+Google Cloud Platform (GCP) provides a suite of features designed to streamline the conversion and transfer of large datasets from on-premises environments, even enabling database transformations during migration: 
 
 **Data Transfer and Conversion Tools**
 
-* **Storage Transfer Service:**  Handles bulk data transfers from on-premise storage (including NFS) to Cloud Storage, efficiently moving terabytes or petabytes of data. 
+* **Storage Transfer Service:**  Handles bulk data transfers from on-premises storage (including NFS) to Cloud Storage, efficiently moving terabytes or petabytes of data. 
 * **Database Migration Service:** Facilitates seamless database migrations, supporting schema and data type conversions to ensure compatibility with GCP databases like Cloud SQL or Spanner.  
 * **Dataflow:** A fully-managed data processing service, ideal for transforming data during migration, enabling format changes, cleansing, or enrichment.
 
@@ -347,8 +348,8 @@ Motivation
 
 * **Single VPC:** A single VPC will be created in GCP to ensure centralized network management and control for all cloud resources.
 * **Two Regions:** 
-    * **US Region:** A region on the US East Coast, geographically close to the existing US on-premise data center. (Example: `us-east1`)
-    * **Europe Region:** A region in Western Europe, geographically close to the existing European on-premise data center. (Example: `europe-west1`)
+    * **US Region:** A region on the US East Coast, geographically close to the existing US on-premises data center. (Example: `us-east1`)
+    * **Europe Region:** A region in Western Europe, geographically close to the existing European on-premises data center. (Example: `europe-west1`)
     * **Optional:** Additional regions can be considered for future expansion or specific business needs.
 * **Zones:** Each region will have at least two zones for high availability and fault tolerance.
 
@@ -356,10 +357,10 @@ Motivation
 
 #### Network Setup
 
-* **High-Level View:** The network setup will focus on establishing secure and performant connectivity between the on-premise data centers and the GCP VPC, while also providing efficient traffic routing and content delivery.
+* **High-Level View:** The network setup will focus on establishing secure and performant connectivity between the on-premises data centers and the GCP VPC, while also providing efficient traffic routing and content delivery.
 
 * **Cloud Interconnect:** 
-    * **Dedicated Interconnect:** Dedicated Interconnect will be used in each region to provide stable and high-bandwidth (10Gbps or 100Gbps) connectivity between the on-premise data centers and the GCP VPC. This ensures low latency and high throughput for critical workloads.
+    * **Dedicated Interconnect:** Dedicated Interconnect will be used in each region to provide stable and high-bandwidth (10Gbps or 100Gbps) connectivity between the on-premises data centers and the GCP VPC. This ensures low latency and high throughput for critical workloads.
     * **Redundancy:** Multiple Dedicated Interconnect connections can be established for redundancy and increased availability.
 
 * **Subnet Design:**
@@ -414,9 +415,9 @@ By harnessing the inherent capabilities of these GCP services and implementing r
 
 #### API Gateway Mesh
 
-* **Apigee Hybrid:** Apigee Hybrid will be used to deploy API Gateway instances both on-premise and in GCP.
-* **Mesh Setup:** Apigee Hybrid's mesh functionality will establish secure communication and unified management across the on-premise and cloud API Gateway instances. 
-* **Benefits:** This hybrid mesh setup provides flexibility in API deployment, allowing for gradual migration of APIs from on-premise to the cloud while maintaining a consistent experience for API consumers.
+* **Apigee Hybrid:** Apigee Hybrid will be used to deploy API Gateway instances both on-premises and in GCP.
+* **Mesh Setup:** Apigee Hybrid's mesh functionality will establish secure communication and unified management across the on-premises and cloud API Gateway instances. 
+* **Benefits:** This hybrid mesh setup provides flexibility in API deployment, allowing for gradual migration of APIs from on-premises to the cloud while maintaining a consistent experience for API consumers.
 
 #### Security
 
@@ -637,7 +638,7 @@ Elasticsearch, while powerful for search, can be complex to deploy and scale, re
 * Product metadata will be indexed and stored in Elasticsearch indices within Elastic Cloud.
 * Search and recommendation APIs will be utilized to power the product search and recommendation features in the application.
 
-**Concequences**
+**Consequences **
 
 - The microservices will need to be adapted to use Elasticsearch SQL, as it offers a limited feature set. 
 
@@ -749,11 +750,11 @@ Delay the migration to GCP because the current payment provider offers a mature 
 
 **Recommendation:** Migrate to a SaaS ticketing provider. 
 
-In the well-established realm of ticketing systems, SaaS solutions present a compelling alternative to traditional on-premise deployments, offering key advantages that align with modern business needs. 
+In the well-established realm of ticketing systems, SaaS solutions present a compelling alternative to traditional on-premises deployments, offering key advantages that align with modern business needs. 
 
 **Key Benefits of SaaS Ticketing:**
 
-* **Scalability & Agility:**  SaaS effortlessly accommodates growth and fluctuating demand, eliminating on-premise performance limitations.
+* **Scalability & Agility:**  SaaS effortlessly accommodates growth and fluctuating demand, eliminating on-premises performance limitations.
 * **Reduced IT Overhead:** Offload maintenance, upgrades, and security to the provider, allowing IT to focus on strategic initiatives.
 * **Enhanced Accessibility & Collaboration:** Empower teams to provide support from anywhere, fostering seamless collaboration and responsiveness.
 * **Cost Predictability:**  Transparent subscription models enable better financial planning and eliminate unexpected infrastructure costs.
@@ -772,7 +773,7 @@ In the well-established realm of ticketing systems, SaaS solutions present a com
 
 #### Assumptions
 - GOES company maintains an OpenID Connect compliant Identity Providers (IdP) to authenticate users.
-- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premise as well.
+- GOES company maintains other applications for employees on-premise, so that IAM for employees is required on-premises as well.
 - GOES consumers already use a 3rd party IdP to authenticate.
 
 #### Migration vs On-premise
@@ -784,20 +785,20 @@ B2B (=partners) and B2E (=employees) will remain on-premise.
 One of the pillars of the Zero Trust approach is to validate the user identity at every component in the infrastructure. On GCP, Identity-Aware Proxy provides a service that can intercept requests to workloads deployed on GKE or Cloud Run and validate the user identity. 
 M2M authentication and authorization can be enforced at the API Gateway. 
 
-#### Integrating On-Premise IAM with GCP IAM 
+#### Integrating on-premises IAM with GCP IAM 
 
-The core goal here is to establish a unified identity and access management system across hybrid environment, allowing users to seamlessly access resources in both on-premise infrastructure and GCP with their existing credentials. Here's how we can approach it:
+The core goal here is to establish a unified identity and access management system across hybrid environment, allowing users to seamlessly access resources in both on-premises infrastructure and GCP with their existing credentials. Here's how we can approach it:
 
 **1. Identity Federation:**
 
-* **Establish trust:** Set up a trust relationship between on-premise identity provider (IdP) and GCP. This allows GCP to rely on IdP for user authentication.
+* **Establish trust:** Set up a trust relationship between on-premises identity provider (IdP) and GCP. This allows GCP to rely on IdP for user authentication.
 * **Protocols:** Choose a suitable federation protocol like SAML (Security Assertion Markup Language) or OpenID Connect (OIDC) to enable secure communication and authentication exchange between the two systems.
-* **User attributes:** Map relevant user attributes (e.g., username, email, group memberships) from on-premise IdP to GCP IAM roles and permissions.
+* **User attributes:** Map relevant user attributes (e.g., username, email, group memberships) from on-premises IdP to GCP IAM roles and permissions.
 
 **2. GCP IAM Roles and Permissions:**
 
-* **Role-based access control (RBAC):** Define granular IAM roles in GCP that align with on-premise roles and responsibilities. Assign appropriate permissions to each role, granting access to specific GCP resources and services.
-* **Group synchronization (optional):** If IdP supports it, consider synchronizing on-premise groups with GCP groups to simplify user management and role assignments.
+* **Role-based access control (RBAC):** Define granular IAM roles in GCP that align with on-premises roles and responsibilities. Assign appropriate permissions to each role, granting access to specific GCP resources and services.
+* **Group synchronization (optional):** If IdP supports it, consider synchronizing on-premises groups with GCP groups to simplify user management and role assignments.
 
 **3. Organization, Folder, and Project Structure:**
 
@@ -808,7 +809,7 @@ The core goal here is to establish a unified identity and access management syst
 **Key Considerations:**
 
 * **User provisioning:** Determine how new users will be provisioned in GCP (e.g., automatically upon first login or through a manual process).
-* **Group management:** Decide how on-premise group changes will be reflected in GCP (e.g., real-time synchronization or periodic updates).
+* **Group management:** Decide how on-premises group changes will be reflected in GCP (e.g., real-time synchronization or periodic updates).
 * **Policy inheritance:** Leverage policy inheritance to apply organization-level policies to folders and projects, simplifying management and ensuring consistency.
 * **Access reviews:** Regularly review and audit access rights to ensure least privilege and prevent unauthorized access.
 
@@ -824,7 +825,7 @@ Some aspects are omitted in this diagram but can be reviewed in the description 
 
 **Problem Statement:**
 
-Organizations with hybrid infrastructure face challenges in achieving unified monitoring and security due to the disparate nature of on-premise and cloud environments. This fragmentation hinders comprehensive visibility, impacting troubleshooting, capacity planning, proactive issue identification, and threat detection.
+Organizations with hybrid infrastructure face challenges in achieving unified monitoring and security due to the disparate nature of on-premises and cloud environments. This fragmentation hinders comprehensive visibility, impacting troubleshooting, capacity planning, proactive issue identification, and threat detection.
 
 Elastic Cloud offers a compelling solution by centralizing monitoring and security data from both environments, providing a single pane of glass for observability and threat detection. Its scalability, high availability, and managed service model ensure efficient monitoring and security that keeps pace with infrastructure growth. Seamless GCP integration further enhances its value in hybrid setups, enabling organizations to gain insights, troubleshoot, optimize performance, and detect and respond to security threats across their entire infrastructure. 
 
@@ -850,7 +851,7 @@ Google Cloud provides a comprehensive developer platform that empowers developer
 - **Cloud Deploy**: A managed service for deploying applications to Google Kubernetes Engine (GKE) or Cloud Run.
 - **Artifact Registry**: A fully managed artifact repository for storing and managing build artifacts, such as container images and language packages. 
   
-This option offers the best integration with GCP services, but requires additional manual effort to ensure compatibility with the on-premise environment. 
+This option offers the best integration with GCP services, but requires additional manual effort to ensure compatibility with the on-premises environment. 
 
 **3. Migrate to an alternative**
 
@@ -858,11 +859,11 @@ Here are the top 5 Developer Platforms, ranked by their suitability for a hybrid
 
 | Rank | Platform | Strengths | Considerations |
 |---|---|---|---|
-| 1 | GitLab | **Flexibility:** Handles diverse deployment targets on GCP and on-premise.<br>**Unified DevOps:** Offers a complete tool suite within one platform.<br>**Hybrid Cloud Support:** Features enable efficient management of hybrid environments.<br>**Elastic Integration:** Can be seamlessly integrated with Elastic Cloud for observability and security. | **Self-Hosting:** On-premise setup might require additional maintenance and expertise. |
-| 2 | Azure DevOps | **Strong CI/CD:** Robust pipeline capabilities for reliable deployments.<br>**Azure Integration:** Works seamlessly with Azure services.<br>**Hybrid Support:** Azure Arc facilitates on-premise resource management.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require additional configuration. | **Configuration:** More setup for on-premise deployments compared to GitLab.<br>**Microsoft Ecosystem:** Deeper integration with Microsoft tools. |
+| 1 | GitLab | **Flexibility:** Handles diverse deployment targets on GCP and on-premise.<br>**Unified DevOps:** Offers a complete tool suite within one platform.<br>**Hybrid Cloud Support:** Features enable efficient management of hybrid environments.<br>**Elastic Integration:** Can be seamlessly integrated with Elastic Cloud for observability and security. | **Self-Hosting:** on-premises setup might require additional maintenance and expertise. |
+| 2 | Azure DevOps | **Strong CI/CD:** Robust pipeline capabilities for reliable deployments.<br>**Azure Integration:** Works seamlessly with Azure services.<br>**Hybrid Support:** Azure Arc facilitates on-premises resource management.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require additional configuration. | **Configuration:** More setup for on-premises deployments compared to GitLab.<br>**Microsoft Ecosystem:** Deeper integration with Microsoft tools. |
 | 3 | Jenkins | **Flexibility & Customization:** Open-source nature allows extensive tailoring to hybrid setup and toolchain.<br>**Wide Integration:** Numerous plugins available, including for Elastic Cloud.<br>**Elastic Integration:** Can be easily integrated with Elastic Cloud for centralized logging and monitoring. | **Manual Setup:** Requires more configuration and maintenance compared to managed solutions.<br>**Steeper Learning Curve:** Might need more expertise to manage effectively. |
 | 4 | Harness | **Advanced CD:** Focuses on sophisticated deployment strategies, ideal for complex hybrid environments.<br>**Visibility:** Provides good insights into deployments and performance.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require custom configuration. | **Newer Platform:** Steeper learning curve compared to established options.<br>**Pricing:** Enterprise features can be costly. |
-| 5 | CircleCI | **Speed & Ease of Use:** Cloud-based platform known for fast builds and intuitive interface.<br>**Hybrid Support:** Self-hosted runners enable on-premise deployments.<br>**Elastic Integration:** Possible through custom scripts or third-party integrations. | **CI/CD Focused:** Primarily for build and deployment.<br>**Cost:** Can be more expensive at scale compared to self-hosted options.<br>**Elastic Integration:** Might require more effort compared to other platforms. |
+| 5 | CircleCI | **Speed & Ease of Use:** Cloud-based platform known for fast builds and intuitive interface.<br>**Hybrid Support:** Self-hosted runners enable on-premises deployments.<br>**Elastic Integration:** Possible through custom scripts or third-party integrations. | **CI/CD Focused:** Primarily for build and deployment.<br>**Cost:** Can be more expensive at scale compared to self-hosted options.<br>**Elastic Integration:** Might require more effort compared to other platforms. |
 
 # Architecture Decisions
 

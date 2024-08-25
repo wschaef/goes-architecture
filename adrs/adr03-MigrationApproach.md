@@ -42,7 +42,7 @@ The challenge is to define the migration approach for the GOES system, consideri
        -  Potential performance bottlenecks.
        -  Lack of cloud-native features.
 3. **Migrate and improve**
-   -  containernize the applications and deploy to the public cloud
+   -  Containerize the applications and deploy to the public cloud
      - **Pros:**
        -  Improved portability and scalability.
        -  Enhanced security and isolation.
@@ -51,7 +51,7 @@ The challenge is to define the migration approach for the GOES system, consideri
        -  Increased complexity in containerization and deployment.
        -  Potential learning curve for container technologies.
        -  Cost associated with container orchestration tools.
-   -  migrate data to databases as service if approriate
+   -  migrate data to databases as service if Appropriate
      - **Pros:**
        -  Simplified data management and scalability.
        -  Reduced infrastructure costs.
@@ -61,7 +61,7 @@ The challenge is to define the migration approach for the GOES system, consideri
        -  Data migration challenges and costs.
        -  Security and compliance considerations.
 4. **Modernize**
-   -  reimplement to be cloud native using higher level services on the public provider
+   -  Re-implement to be cloud native using higher level services on the public provider
      - **Pros:**
        -  Maximum scalability and flexibility.
        -  Leveraging cloud-native features and services.
@@ -94,7 +94,7 @@ For the Streaming domain, option 4 **Modernize** is the best choice due to:
 
 - Streaming has the highest load requirements, demanding huge amounts of storage, network bandwidth, and geographical proximity to customers. 
 
-## Concequences
+## Consequences 
 
 - Data migration will be a significant challenge.
 - Modernization of migrated applications towards higher-level services remains an option for the future. 

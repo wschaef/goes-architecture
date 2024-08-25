@@ -23,5 +23,5 @@ While the final cloud provider selection involves a broader enterprise-level dec
 
 I'd like to note that other major cloud providers like AWS or Azure could also be suitable depending on the specific requirements and constraints of the system being designed. The ideal choice would align with both the technical needs and the financial goals of the organization.
 
-## Concequences
+## Consequences 
 - All detailed designs will be done with GCP as cloud provider

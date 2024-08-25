@@ -72,8 +72,8 @@ Following domains will be deployed in the public cloud:
 
 Following domains will be deployed on-premise:
 
-- **Customer**: The customer domain contains sensitive customer data that requires strict control and compliance with data privacy regulations. On-premise deployment allows for greater control over data security and compliance.
-- **Order**: The order domain is tightly integrated with the customer domain and requires similar levels of data security and control. On-premise deployment ensures data integrity and compliance. 
+- **Customer**: The customer domain contains sensitive customer data that requires strict control and compliance with data privacy regulations. on-premises deployment allows for greater control over data security and compliance.
+- **Order**: The order domain is tightly integrated with the customer domain and requires similar levels of data security and control. on-premises deployment ensures data integrity and compliance. 
 
-## Concequences
+## Consequences 
 - All dodmains except **Customer** and **Oder** domain have to be migrated to the public cloud.

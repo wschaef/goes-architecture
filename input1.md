@@ -20,10 +20,10 @@ The company (GOES) has made a strategic decision to transition to a hybrid cloud
 
 Choosing a cloud provider of your preference, guide us through the architectural transformation this company needs to undertake to successfully transition to the cloud. Key objectives are:
 
-* To design an architecture using cloud-native patterns that effectively supports the transition of existing on-premise applications and infrastructure to the cloud.
+* To design an architecture using cloud-native patterns that effectively supports the transition of existing on-premises applications and infrastructure to the cloud.
 * To address the challenges of ensuring seamless functioning in a hybrid environment.
 * To identify and discuss potential risks associated with moving to the cloud and propose strategies to mitigate them.
-* To highlight the opportunities that the cloud provides over their existing self-managed on-premise setup, outlining the potential benefits and enhancements the company could enjoy.
+* To highlight the opportunities that the cloud provides over their existing self-managed on-premises setup, outlining the potential benefits and enhancements the company could enjoy.
 * To demonstrate a comprehensive understanding of key considerations the company should have during this transition, such as cost, security, scalability, and data management.
 
 #### Considerations and attributes
