@@ -689,7 +689,6 @@ Business logic is implemented in the Shop API which uses Firestore to maintain u
 
 #### Database
 
-
 **Relevant Assumptions**:
 - **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
 - **Record Size:** 10KB user profile size
@@ -798,7 +797,6 @@ The core goal here is to establish a unified identity and access management syst
 * **Policy inheritance:** Leverage policy inheritance to apply organization-level policies to folders and projects, simplifying management and ensuring consistency.
 * **Access reviews:** Regularly review and audit access rights to ensure least privilege and prevent unauthorized access.
 
-
 ### Design
 
 Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
@@ -851,26 +849,25 @@ Here are the top 5 Developer Platforms, ranked by their suitability for a hybrid
 | 4 | Harness | **Advanced CD:** Focuses on sophisticated deployment strategies, ideal for complex hybrid environments.<br>**Visibility:** Provides good insights into deployments and performance.<br>**Elastic Integration:** Can be integrated with Elastic Cloud, but might require custom configuration. | **Newer Platform:** Steeper learning curve compared to established options.<br>**Pricing:** Enterprise features can be costly. |
 | 5 | CircleCI | **Speed & Ease of Use:** Cloud-based platform known for fast builds and intuitive interface.<br>**Hybrid Support:** Self-hosted runners enable on-premise deployments.<br>**Elastic Integration:** Possible through custom scripts or third-party integrations. | **CI/CD Focused:** Primarily for build and deployment.<br>**Cost:** Can be more expensive at scale compared to self-hosted options.<br>**Elastic Integration:** Might require more effort compared to other platforms. |
 
-
-# Cross-cutting Concepts
-
-## *\<Concept 1>*
-
-*\<explanation>*
-
-## *\<Concept 2>*
-
-*\<explanation>*
-
-…
-
-## *\<Concept n>*
-
-*\<explanation>*
-
 # Architecture Decisions
 
+There are the major architecture decisions documented as Architectural Decision Records (ADRs):
+
+- [ADR Mapping of domain to public cloud vs on-premise](./adrs/adr01-DomainsMapping.md)
+- [ADR Select public cloud provider](./adrs/adr02-PublicCloudProvider.md)
+- [ADR Select Migration Approach](./adrs/adr03-MigrationApproach.md)
+
 # Risks and Technical Debts
+
+This document presents a preliminary system design to address the specified challenge. The design prioritizes certain considerations over others, informed by my expertise and understanding. It is rooted in my current knowledge of relevant technologies and potential risks. However, it's important to recognize that this design serves as a high-level conceptual framework and might contain inaccuracies or omissions.
+
+Following list highlights some illustrative examples of areas where the design could benefit from further refinement. It is not an exhaustive inventory of all potential gaps.
+
+- **Analytics not covered:** The design does not yet incorporate a comprehensive analytics solution.
+- **Network Setup not covered:** The network setup is not fully defined.
+- **Comprehensive Data volume analysis:** The data volume analysis is not exhaustive.
+
+In a real scenario, I would spend more time understanding the current situation and the motivation behind the task. 
 
 # Glossary
 
