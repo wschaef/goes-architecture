@@ -105,18 +105,6 @@ The exact numbers for non-functional requirements are assumptions too.
 
 > **Guideline - Technical reference to user:** A unique, anonymized identifier (e.g., a UUID) can be stored in the public cloud to reference a user. This identifier should only be linked to personal information in the on-premises systems, not in the public cloud. 
 
-#### Data volume estimation (net)
-
-| Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
-|---|---|---|---|---|
-| Customer Data | 100GB | 1GB | 10GB | Assuming 1KB per user for PII and payment details, 1% daily churn rate, and 10% daily active users. |
-| Transactional Data | 5GB | 5GB | 1GB | Assuming 10% of users make a transaction per day, 1KB per transaction, and 20% of transactions result in customer service requests. |
-| Product Data | 110GB | 1,1GB | 2,220TB | Assuming 10KB text description, 1MB images, 10MB videos per product, 10.000 products, 1% daily product updates, and 20 product views per user per day. |
-| Streaming Data (Content Library) | 266.4 TB | 444 GB | 18 Tbps/hour | Assuming average bitrate of 5 Mbps across all resolutions and peak concurrency for 1 hour per day. 5% monthly content addition. |
-| Log and Monitoring Data | 18 TB | 600GB | 5GB | Assuming 10KB logs per user per day, 100 GB server logs per day, and 1% of logs are accessed for analysis. 30-day retention. |
-
-- The gross storage requirement is significantly higher than the net storage requirement due to redundancy and overhead.
-
 ## Stakeholders
 
 1. Application Stack developer
@@ -441,6 +429,7 @@ Non-prod environments are not in scope for this document. However, from a high-l
 ## Domain Streaming
 
 ### Considerations
+
 1.  **Video Encoding and Transcoding:**
     - **Complexity and Resource Intensiveness**: Video encoding and transcoding require substantial computational resources, especially for high-resolution and high-bitrate content. Maintaining real-time encoding and transcoding while ensuring optimal quality across various devices and network conditions can be challenging.
     - **Codec Selection and Optimization**: Choosing the right video codecs (e.g., H.264, H.265, AV1) and optimizing their parameters to balance compression efficiency, quality, and compatibility across different platforms is crucial.
@@ -460,9 +449,29 @@ Non-prod environments are not in scope for this document. However, from a high-l
     - **Real-time Monitoring**: Implementing real-time monitoring and analytics to track user engagement, playback quality, and system performance is crucial. Collecting, processing, and analyzing massive amounts of data in real time presents technical challenges.
     - **Quality of Experience (QoE) Measurement**: Accurately measuring and optimizing QoE, including factors like buffering, startup time, and video quality, across diverse user environments and network conditions requires sophisticated analytics tools and techniques.
 
+### Data volume estimation
+
+**Relevant Assumptions:**
+- **Content Library:** The company has about 10,000 hours of content in its content library of on-demand video and audio content, distributed as follows: 5% SD, 70% HD, and 25% 4K. Avarage bitrates - SD: 2 Mbps, HD: 5 Mbps, 4K: 15 Mbps -> 7,35 Mbps avarage bitrate
+
+**Data Volume (net):**  35 TB
+> 7,35 Mbps * 10000 hours * 3600 sec/hour : 8 bits/byte : 1.000.000 MB/TB = 33,075 TB
+
+**Data Volume (gross):** 150TB
+> net * 2 regions * 2 for ABR = 132,3 TB
+
 ### Design
 
 Some aspects are omitted in this diagram but can be reviewed in the description of the landing zone. 
+
+For a scalable and resilient streaming platform, videos are initially uploaded to **Cloud Storage**.  A **Pub/Sub** message triggers the **Transcoder API** to process the video into multiple formats and resolutions optimized for various devices. **Cloud Functions** manage the orchestration, handling tasks like updating metadata and triggering CDN cache invalidation. The processed videos are stored back in **Cloud Storage** and distributed globally via **Media CDN** for low-latency delivery. **Cloud Armor** acts as a protective layer, safeguarding against DDoS attacks and other threats, ensuring uninterrupted streaming experiences for users. 
+
+The **Content Management Application** serves as a user interface and data management tool, storing and retrieving structured data related to content management within **Cloud SQL**. This data might include user information, content categories, workflows, publishing schedules, and other organizational elements. The application itself does not handle the storage or processing of actual content or its metadata. 
+
+The **Streaming Application** is a multi platform frontend for consumers.
+
+> **Media CDN** fulfills all requirements on streaming 
+> **Cloud Functions** and **Trancoder API** is a very cost effective solution
 
 ![Domain Streaming](img/DomainStreaming.drawio.svg)
 
@@ -471,6 +480,30 @@ Some aspects are omitted in this diagram but can be reviewed in the description 
 ### Considerations
 
 Domain Customer remains on premise and is interated with other domains by REST APIs.
+
+### Data volume and network bandwidth estimation
+
+**Relevant Assumptions:**
+- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
+- **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
+- **Record Size:** 1KB per user for Personally Identifiable Information (PII)
+- **Change Rate:** 0,01% of users change their PII per day
+- **Read Rate:** 100 requests per hour per active user (caching of PII data is a complicated topic)
+
+**Data Volume (net):**  50GB
+> 1KB * 50 million users = 50GB
+**Data Volume (gross):** 200GB
+> net * 2 regions * 2 zones  = 200GB
+**Data Volume (Read):** 140MB/sec
+> 1KB * 1 million active users * 100 requests/hour : 3600 seconds/hour = 139MB/sec
+**Data Volume (Write):** 1KB/sec
+> 1KB * 50 million users * 0,01% : 86.400 seconds/day = 1KB/sec
+
+**Network bandwidth inter cloud**: 4,5 Gbps
+> 140 MB/sec * 8 bit/byte = 1120 Mbps
+> 1120 Mbps * 2 (daily distribution) + 20% Overhead = 2688 Mbps
+> 2688 Mbps : 3 (compression factor) = 896 Mbps
+> 895 Mbps * 5 peak load = 4500 Mbps
 
 ### Design
 
@@ -483,6 +516,32 @@ Some aspects are omitted in this diagram but can be reviewed in the description 
 ### Considerations
 
 Domain Order remains on premise and is interated with other domains by REST APIs.
+
+### Data volume and network bandwidth estimation
+
+**Relevant Assumptions:**
+- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
+- **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
+- **Record Size:** 1KB per order
+- **Change Rate:** 10% of active users make an order transaction per day
+- **Read Rate:** 10% of the change rate
+- **Retention Period:** 10 years
+
+**Data Volume (net):** 20TB
+> 1KB * 50 million users * 10% = 5GB #data per day
+> 5GB * 365 days * 10 years = 18250 GB
+**Data Volume (gross):** 80TB
+> net * 2 regions * 2 zones  = 80TB
+**Data Volume (Read):** 6KB/sec
+> 60KB/s * 10% = 6KB/sec
+**Data Volume (Write):** 60KB/sec
+> 5GB/day : 86.400 seconds/day = 60KB/sec
+
+**Network bandwidth inter cloud**: 2,5 Mbps
+> 66 KB/sec * 8 bit/byte = 528 kbps -> 600 kbps
+> 600 kbps * 2 (daily distribution) + 20% Overhead = 1440 kbps -> 1,5 Mbps
+> 1,5 Mbps : 3 (compression factor) = 0,5 Mbps
+> 0,5 Mbps * 5 peak load = 2,5 Mbps
 
 ### Design
 
@@ -515,27 +574,21 @@ While GKE offers greater flexibility and control, it also introduces additional 
 
 #### Database
 
-**Assumptions**:
-- 10.000 products
-- 1% daily product updates -> 100 product updates per day
-- 20 product views per user per day for 50 millions users
-- 1 million concurrent users
-- 10KB text description, 1MB images, 10MB videos per product
+**Relevant Assumptions**:
+- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
+- **Products:** The company has about 10,000 products with 1% daily product updates.
+- **Record Size:** 10KB text description, 1MB images, 10MB videos per product
+- **Change Rate:** 1% daily product updates -> 100 product updates per day
+- **Read Rate:** 20 product views per user per day for 50 millions users
+- **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
 
-The assumptions made in the Data volume estimation:
-
-| Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
-|---|---|---|---|---|
-| Product Data | 110GB | 1,1GB | 2,220TB | Assuming 10KB text description, 1MB images, 10MB videos per product, 10.000 products, 1% daily product updates, and 20 product views per user per day. |
-
-We have different types of data, such as media and metadata, which require different databases.
+There are different types of data, such as media and metadata, which require different databases.
 Considering the requirement to scale five times and the need for replication for availability, the Products domain must meet the following data requirements: 
 
 | Data Type | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
 |---|---|---|---|---|
 | Meta data | 200MB | 5MB | 50TB | 10KB text description * 10000 products * 2 replication, 10kb * 100 updates * 5 scale, 10KB * 20 views * 50 million active users * 5 scale |
 | Media data | 220GB | 5,5GB | 55PB | 11BM * 10000 products * 2 replication, 11MB * 100 updates * 5 scale, 11MB * 20 views * 50 million active users * 5 scale |
-
 
 ##### Meta Data 
 
@@ -636,12 +689,13 @@ Business logic is implemented in the Shop API which uses Firestore to maintain u
 
 #### Database
 
-**Assumptions:**
-- 50 million active users
-- 1 million concurrent users
-- 10KB user profile size
-- 1% of users update their profile daily
-- One user profile read per user session 
+
+**Relevant Assumptions**:
+- **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
+- **Record Size:** 10KB user profile size
+- **Change Rate:** 1% of users update their profile daily
+- **Read Rate:** One user profile read per user session 
+- **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
 
 | Data Domain | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
 |---|---|---|---|---|
