@@ -36,7 +36,7 @@ The exact numbers for non-functional requirements are assumptions too.
     - Modernize payment processes to align with industry best practices.
     - Eliminate the requirement for browser plugins.
 - **Identity and Access Management (IAM):**
-    -Implement Single-Sign-On (SSO) across both on-premise and cloud environments. 
+    - Implement Single-Sign-On (SSO) across both on-premise and cloud environments. 
 - **Hybrid Environment:**
     - Establish reliable data synchronization between the on-premises and cloud environments.
     - Implement secure and high-bandwidth connectivity between the on-premises and cloud environments (e.g., VPN, Direct Connect).
@@ -45,7 +45,7 @@ The exact numbers for non-functional requirements are assumptions too.
 - **Security:**
     - Implement robust security measures to protect sensitive customer data (e.g., encryption, access control, SIEM).
     - Ensure compliance with relevant data privacy regulations (e.g., GDPR, CCPA).
-    - Migrate user roles and permissions from the on-premises system to the cloud.
+    - Extend and adopt user roles and permissions from the on-premises system to the hybrid setup.
     - Implement granular access control to cloud resources based on user roles and permissions. 
 
 ### Non-Functional Requirements:
@@ -79,7 +79,6 @@ The exact numbers for non-functional requirements are assumptions too.
 
 ### Additional conciderations
 
-- **Content Management System (CMS):** A robust CMS will be needed to manage and organize the content library, metadata, user subscriptions, etc. This system should integrate well with the cloud environment and support efficient content ingestion, processing, and delivery.
 - **Recommendation Engine:** Implementing a recommendation engine could personalize content suggestions for users, potentially improving engagement and satisfaction. This might involve machine learning models and require large datasets for training.
 - **Analytics and Monitoring:** Comprehensive analytics and monitoring are crucial for tracking user behavior, content performance, and overall system health. This might involve integrating with cloud-based monitoring tools and potentially developing custom dashboards for real-time insights. 
 
@@ -104,6 +103,9 @@ The exact numbers for non-functional requirements are assumptions too.
 | Log and Monitoring Data | Yes | Logs and metrics related to system performance and security events are generally not considered personal data. However, if these logs contain information that can be linked back to individuals, GDPR compliance needs to be assessed. | 
 
 > **Guideline - Technical reference to user:** A unique, anonymized identifier (e.g., a UUID) can be stored in the public cloud to reference a user. This identifier should only be linked to personal information in the on-premises systems, not in the public cloud. 
+
+The decision about structuring the GOES architecture into domains and choosing the target platform (on-premise or cloud) for each domain is documented here: 
+- [ADR Mapping of domain to public cloud vs on-premise](./adrs/adr01-DomainsMapping.md)
 
 ## Stakeholders
 
@@ -202,6 +204,12 @@ The solution strategy involves defining the target architecture, creating a migr
 
 ## Migration approach
 
+### Target Cloud Provider
+
+The decision to choose GCP as the target public cloud provider is documented here: 
+
+- [ADR Select public cloud provider](./adrs/adr02-PublicCloudProvider.md)
+
 ### Challenges of Migrating from On-Premise to Hybrid (On-Premise + GCP)
 
 Migrating from a purely on-premise infrastructure to a hybrid model that incorporates Google Cloud Platform (GCP) can present several complex challenges:
@@ -228,6 +236,13 @@ Migrating from a purely on-premise infrastructure to a hybrid model that incorpo
 Despite these challenges, adopting a hybrid model can bring significant benefits like improved scalability, flexibility, and access to advanced cloud services. Careful planning, addressing these challenges proactively, and selecting the right migration strategy are key to a successful transition to a hybrid on-premise + GCP infrastructure.
 
 ### Proposed approach
+
+[ADR Select Migration Approach](./adrs/adr03-MigrationApproach.md) is an Architectural Decision Record (ADR) that explores different approaches to migrating an existing application called GOES to the cloud. It outlines four main options:
+
+- **Rehost**: Lift and shift the application to a virtual machine in the cloud.
+- **Replatform**: Move the application to the cloud with minimal changes, potentially leveraging some cloud-native services (like managed databases).
+- **Migrate and improve**: Migrate existing containerized applications and improve the architecture using cloud-native services.
+- **Modernize**: Completely re-architect the application to be cloud-native, using higher-level cloud services. 
 
 #### 1. Setup the landing zone defining following aspects:
 
@@ -315,10 +330,10 @@ Motivation
 ![Whitebox View of Overall System](img/Container.drawio.svg)
 
 - **Streaming:** This building block is responsible for the delivery of video and audio content to consumers. It handles tasks like encoding, transcoding, and streaming protocols. 
-- **Shop:** The Shop building block manages the e-commerce aspects of the system, including product listings, purchase transactions, and order fulfillment.
+- **Shop:** The Shop building block represents the frontend for e-commerce aspects of the system.
 - **Order:** This building block manages the order process, including order creation, fulfillment, and tracking.  
 - **Product:** This building block stores and manages product information, including metadata, pricing, and inventory.
-- **Customer:** The Customer building block stores and manages user information, including account details, preferences, and purchase history. 
+- **Customer:** The Customer building block stores and manages user information, including account details. 
 - **Payment:** This building block handles financial transactions, including payment processing and fraud detection. 
 - **IAM *(Identity and Access Management)*:** The Identity building block manages user authentication and authorization, allowing users to log in and access system resources. 
 - **Ticket System:** This building block provides a system for users to report issues and request support. 
