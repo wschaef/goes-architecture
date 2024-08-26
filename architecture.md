@@ -84,7 +84,7 @@ The exact numbers for non-functional requirements are assumptions too.
 
 ### Data volume analysis
 
-#### Data domains
+#### Data Domains
 
 - **Customer Data:** This includes personally identifiable information (PII) such as names, addresses, contact details, and payment information. The sensitivity of this data necessitates robust security and compliance measures, potentially influencing the decision to keep some data on-premises in a hybrid model.
 - **Transactional Data:** This encompasses data related to purchases, orders, payments, and shipping. The volume and velocity of this data, especially during peak periods like holidays, require a scalable and performant architecture.
@@ -114,7 +114,6 @@ The decision about structuring the GOES architecture into domains and choosing t
 - VP Engineering
 - A Business Person of the solution internal to our company
 
-
 # Architecture Constraints
 
 The current architecture comprises two data centers, one in America and one in Europe, with data replication facilitated by a VPN tunnel. The architecture style adheres to a three-tier model, consisting of web servers, APIs, and databases. 
@@ -140,7 +139,6 @@ The system context diagram depicts the system's boundaries and its interactions 
 - **Security:** A person or team responsible for ensuring the confidentiality, integrity, and availability of the system.
 - **1st Level Support:** A person or team providing initial technical support to users of the system. 
 
-
 ### External systems
 - **Content Provider:** A third-party service that provides media content to the system.
 - **Payment Provider:** A third-party service that handles financial transactions for the system (e.g., processing payments from consumers).
@@ -150,13 +148,13 @@ The system context diagram depicts the system's boundaries and its interactions 
 
 The solution strategy involves defining the target architecture, creating a migration path, and adopting the new architecture. 
 
-## Migration approach
-
-### Target Cloud Provider
+## Target Cloud Provider
 
 The decision to choose GCP as the target public cloud provider is documented here: 
 
 - [ADR Select public cloud provider](./adrs/adr02-PublicCloudProvider.md)
+
+## Migration approach
 
 ### Challenges of Migrating from on-premises to Hybrid (on-premises + GCP)
 
@@ -185,12 +183,15 @@ Despite these challenges, adopting a hybrid model can bring significant benefits
 
 ### Proposed approach
 
-[ADR Select Migration Approach](./adrs/adr03-MigrationApproach.md) is an Architectural Decision Record (ADR) that explores different approaches to migrating an existing application called GOES to the cloud. It outlines four main options:
+There are several approaches to migrating to the cloud:
 
-- **Migrate to SaaS**: Use E-Commerce and Streaming SaaS offerings and migrate the data there.
-- **Rehost**: Lift and shift the application to a virtual machine in the cloud.
-- **Migrate and improve**: Migrate existing containerized applications and improve the architecture using cloud-native services.
-- **Modernize**: Completely re-architect the application to be cloud-native, using higher-level cloud services. 
+- **Migrate to SaaS:** Utilize E-Commerce and Streaming SaaS offerings and migrate the data to these services.
+- **Rehost:** Lift and shift the application to a virtual machine in the cloud.
+- **Migrate and Improve:** Migrate existing containerized applications and enhance the architecture using cloud-native services.
+- **Modernize:** Completely re-architect the application to be cloud-native, leveraging higher-level cloud services.
+
+For the GOES System, a one-size-fits-all approach is not feasible due to the diversity of domains and the current implementation.
+[ADR Select Migration Approach](./adrs/adr03-MigrationApproach.md) is an Architectural Decision Record (ADR) that explores various approaches to migrating the existing GOES application to the cloud. 
 
 #### 1. Setup the landing zone defining following aspects:
 
@@ -236,7 +237,7 @@ Some ot theese aspects are designed in **GCP Landing zone - High level view on h
 
 API mesh streamlines cloud migration by decoupling APIs from their implementation, allowing incremental migration without consumer refactoring. It provides dynamic traffic routing for gradual shifts, observability for issue detection, and consistent security across hybrid environments. This ensures a seamless transition with minimal disruption.
 
-#### 3 Adopt DevSecOps platform
+#### 3 Adopt DevSecOps Platform
 
 A clear and well-defined DevSecOps platform is crucial for teams working in a hybrid environment.  A poor DevSecOps experience can quickly impact the development velocity and overall efficiency of the project. 
 
@@ -244,7 +245,7 @@ Establishing end-to-end monitoring is crucial for a successful migration. It pro
 
 #### 4. Implement a PoC for migration
 
-Choose a component with the fewest dependencies and migrate it to the cloud first. 
+Choose a component with the fewest dependencies that best represents the other components and migrate it to the cloud first. 
 
 #### 5. Migrate Domains
 
@@ -287,7 +288,7 @@ Motivation
 - **Ticket System:** This building block provides a system for users to report issues and request support. 
 - **DevSecOps Platform:** The DevSecOps Platform provides a unified environment for managing infrastructure, deploying applications, and integrating security measures throughout the software development lifecycle. 
  
-## Landing zone - High level view on hybrid cloud setup
+## Landing Zone - High level view on hybrid cloud setup
 
 ### Considerations
 
@@ -328,30 +329,30 @@ Motivation
 
 In a hybrid setup with stringent RTO (<4 hours) and RPO (<24 hours) requirements, data recovery on the GCP side warrants careful attention to the following strategies, tailored to the specific services in use - Cloud SQL, Firestore, Cloud Storage, and Media CDN:
 
-Cloud SQL
+**Cloud SQL**
 
 * **Automated backups:** Ensure that automated backups are enabled with a frequency that aligns with the RPO, potentially hourly or even more frequently.
 * **Regional replicas:** Consider deploying replicas in a different region within the same multi-region VPC to enable faster failover and recovery should a regional outage occur.
 * **Point-in-time recovery:** Leverage this feature to restore the database to a specific point in time within the backup retention period. 
 
-Firestore
+**Firestore**
 
 * **Multi-region deployment:** Opt for a multi-region deployment of Firestore to achieve high availability and automatic failover in the event of regional disruptions. 
 * **Data exports:** Regularly export Firestore data to Cloud Storage to create additional backup and recovery options.
 * **Point-in-time recovery:** Utilize the built-in point-in-time recovery feature to restore data to a specific point in the past. 
 
-Cloud Storage
+**Cloud Storage**
 
 * **Object Versioning:** Enabling versioning is recommended to preserve previous versions of objects, providing a safety net against accidental deletions or overwrites.
 * **Cross-region replication:** Consider replicating critical data to a bucket in a different region for added durability and faster recovery in case of a regional outage.
 * **Lifecycle management:** Implementing lifecycle policies can automatically transition objects to lower-cost storage classes (like Coldline or Archive) for long-term retention and cost optimization.
 
-Media CDN
+**Media CDN**
 
 * **Origin redundancy:** Configuring multiple origins (such as Cloud Storage buckets in different regions) helps ensure content availability even if one origin becomes unavailable.
 * **Cache invalidation:** Implement mechanisms to invalidate cache content quickly in case of updates or errors to ensure users receive the latest versions. 
 
-Additional Considerations
+**Additional Considerations**
 
 * **Monitoring and Alerting:** Comprehensive monitoring and alerting should be implemented to promptly detect failures or performance degradation in any of the GCP services.
 * **Automated Recovery:** Develop and test automated recovery workflows to minimize manual intervention and ensure timely recovery within the RTO. 
@@ -418,10 +419,10 @@ Non-prod environments are not in scope for this document. However, from a high-l
 - **Content Library:** The company has about 10,000 hours of content in its content library of on-demand video and audio content, distributed as follows: 5% SD, 70% HD, and 25% 4K. Avarage bitrates - SD: 2 Mbps, HD: 5 Mbps, 4K: 15 Mbps -> 7,35 Mbps avarage bitrate
 
 **Data Volume (net):**  35 TB
-> 7,35 Mbps * 10000 hours * 3600 sec/hour : 8 bits/byte : 1.000.000 MB/TB = 33,075 TB
+> - 7,35 Mbps * 10000 hours * 3600 sec/hour : 8 bits/byte : 1.000.000 MB/TB = 33,075 TB
 
 **Data Volume (gross):** 150TB
-> net * 2 regions * 2 for ABR = 132,3 TB
+> - net * 2 regions * 2 for ABR = 132,3 TB
 
 ### Design
 
@@ -433,8 +434,8 @@ The **Content Management Application** serves as a user interface and data manag
 
 The **Streaming Application** is a multi platform frontend for consumers.
 
-> **Media CDN** fulfills all requirements on streaming 
-> **Cloud Functions** and **Trancoder API** is a very cost effective solution
+> - **Media CDN** fulfills all requirements on streaming 
+> - **Cloud Functions** and **Trancoder API** is a very cost effective solution
 
 ![Domain Streaming](img/DomainStreaming.drawio.svg)
 
@@ -454,19 +455,22 @@ Domain Customer remains on premise and is interated with other domains by REST A
 - **Read Rate:** 100 requests per hour per active user (caching of PII data is a complicated topic)
 
 **Data Volume (net):**  50GB
-> 1KB * 50 million users = 50GB
+> - 1KB * 50 million users = 50GB
+
 **Data Volume (gross):** 200GB
-> net * 2 regions * 2 zones  = 200GB
-**Data Volume (Read):** 140MB/sec
-> 1KB * 1 million active users * 100 requests/hour : 3600 seconds/hour = 139MB/sec
+> - net * 2 regions * 2 zones  = 200GB
+
+**Data Volume (Read):** 28MB/sec
+> - 1KB * 1 million active users * 100 requests/hour : 3600 seconds/hour : 1024 = 28MB/sec
+
 **Data Volume (Write):** 1KB/sec
-> 1KB * 50 million users * 0,01% : 86.400 seconds/day = 1KB/sec
+> - 1KB * 50 million users * 0,01% : 86.400 seconds/day = 1KB/sec
 
 **Network bandwidth inter cloud**: 4,5 Gbps
-> 140 MB/sec * 8 bit/byte = 1120 Mbps
-> 1120 Mbps * 2 (daily distribution) + 20% Overhead = 2688 Mbps
-> 2688 Mbps : 3 (compression factor) = 896 Mbps
-> 895 Mbps * 5 peak load = 4500 Mbps
+> - 140 MB/sec * 8 bit/byte = 1120 Mbps
+> - 1120 Mbps * 2 (daily distribution) + 20% Overhead = 2688 Mbps
+> - 2688 Mbps : 3 (compression factor) = 896 Mbps
+> - 895 Mbps * 5 peak load = 4500 Mbps
 
 ### Design
 
@@ -491,20 +495,23 @@ Domain Order remains on premise and is interated with other domains by REST APIs
 - **Retention Period:** 10 years
 
 **Data Volume (net):** 20TB
-> 1KB * 50 million users * 10% = 5GB #data per day
-> 5GB * 365 days * 10 years = 18250 GB
+> - 1KB * 50 million users * 10% = 5GB #data per day
+> - 5GB * 365 days * 10 years = 18250 GB
+
 **Data Volume (gross):** 80TB
-> net * 2 regions * 2 zones  = 80TB
+> - net * 2 regions * 2 zones  = 80TB
+
 **Data Volume (Read):** 6KB/sec
-> 60KB/s * 10% = 6KB/sec
+> - 60KB/s * 10% = 6KB/sec
+
 **Data Volume (Write):** 60KB/sec
-> 5GB/day : 86.400 seconds/day = 60KB/sec
+> - 5GB/day : 86.400 seconds/day = 60KB/sec
 
 **Network bandwidth inter cloud**: 2,5 Mbps
-> 66 KB/sec * 8 bit/byte = 528 kbps -> 600 kbps
-> 600 kbps * 2 (daily distribution) + 20% Overhead = 1440 kbps -> 1,5 Mbps
-> 1,5 Mbps : 3 (compression factor) = 0,5 Mbps
-> 0,5 Mbps * 5 peak load = 2,5 Mbps
+> - 66 KB/sec * 8 bit/byte = 528 kbps -> 600 kbps
+> - 600 kbps * 2 (daily distribution) + 20% Overhead = 1440 kbps -> 1,5 Mbps
+> - 1,5 Mbps : 3 (compression factor) = 0,5 Mbps
+> - 0,5 Mbps * 5 peak load = 2,5 Mbps
 
 ### Design
 
@@ -540,17 +547,18 @@ While GKE offers greater flexibility and control, it also introduces additional 
 **Relevant Assumptions**:
 - **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
 - **Products:** The company has about 10,000 products with 1% daily product updates.
-- **Record Size:** 10KB text description, 1MB images, 10MB videos per product
+- **Record Size:** 10KB text description, 1MB images, 10MB videos per product, 10MB for user added data like reviews 
 - **Change Rate:** 1% daily product updates -> 100 product updates per day
 - **Read Rate:** 20 product views per user per day for 50 millions users
 - **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
 
-There are different types of data, such as media and metadata, which require different databases.
+There are different types of data, such as media and text data, which require different databases.
 Considering the requirement to scale five times and the need for replication for availability, the Products domain must meet the following data requirements: 
 
 | Data Type | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
 |---|---|---|---|---|
 | Meta data | 200MB | 5MB | 50TB | 10KB text description * 10000 products * 2 replication, 10kb * 100 updates * 5 scale, 10KB * 20 views * 50 million active users * 5 scale |
+| User added data | 200GB | 5GB | 50PB | 10MB text description * 10000 products * 2 replication, 10Mb * 100 updates * 5 scale, 10MB * 20 views * 50 million active users * 5 scale |
 | Media data | 220GB | 5,5GB | 55PB | 11BM * 10000 products * 2 replication, 11MB * 100 updates * 5 scale, 11MB * 20 views * 50 million active users * 5 scale |
 
 ##### Meta Data 
@@ -559,9 +567,9 @@ Considering the requirement to scale five times and the need for replication for
 
 * **Data Storage and Management:**
     * Data Type: Product metadata
-    * Data Volume Store: 200MB
-    * Data Volume Write per Day: 5MB
-    * Data Volume Read per Day: 50TB
+    * Data Volume Store: 200GB
+    * Data Volume Write per Day: 5GB 
+    * Data Volume Read per Day: 50PB -> well-suited for caching 
 
 * **User Experience:**
     * Advanced product search capabilities, including:
