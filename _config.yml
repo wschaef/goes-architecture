@@ -1,0 +1,6 @@
+remote_theme: pages-themes/architect@v0.2.0
+plugins:
+- jekyll-remote-theme # add this line to the plugins list if you already have one
+
+title: ["GOES - System Design"]
+description: [This repository is intended to be used during a system design interview for a given challenge. It serves as a template to guide the discussion and showcase my understanding of architectural principles and best practices.]
