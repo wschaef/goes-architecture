@@ -464,7 +464,7 @@ Domain Customer remains on premise and is interated with other domains by REST A
 > - 1KB * 1 million active users * 100 requests/hour : 3600 seconds/hour : 1024 = 28MB/sec
 
 **Data Volume (Write):** 1KB/sec
-> - 1KB * 50 million users * 0,01% : 86.400 seconds/day = 1KB/sec
+> - 1KB * 50 million users * 0,01% : 86.400 seconds/day = 0,058 KB/sec
 
 **Network bandwidth inter cloud**: 4,5 Gbps
 > - 140 MB/sec * 8 bit/byte = 1120 Mbps
@@ -547,7 +547,7 @@ While GKE offers greater flexibility and control, it also introduces additional 
 **Relevant Assumptions**:
 - **User Base:** The company has approximately 50 million active users, with a peak concurrency of 1 million concurrent users. 
 - **Products:** The company has about 10,000 products with 1% daily product updates.
-- **Record Size:** 10KB text description, 1MB images, 10MB videos per product, 10MB for user added data like reviews 
+- **Record Size:** 10KB text description, 1MB images, 10MB videos per product, 100KB for user added data like reviews 
 - **Change Rate:** 1% daily product updates -> 100 product updates per day
 - **Read Rate:** 20 product views per user per day for 50 millions users
 - **Peak Load:** Peak load during holiday seasons or special events can result in a 5 times increase in traffic compared to normal conditions.
@@ -558,7 +558,7 @@ Considering the requirement to scale five times and the need for replication for
 | Data Type | Data Volume Store | Data Volume Write per Day | Data Volume Read per Day | Comment |
 |---|---|---|---|---|
 | Meta data | 200MB | 5MB | 50TB | 10KB text description * 10000 products * 2 replication, 10kb * 100 updates * 5 scale, 10KB * 20 views * 50 million active users * 5 scale |
-| User added data | 200GB | 5GB | 50PB | 10MB text description * 10000 products * 2 replication, 10Mb * 100 updates * 5 scale, 10MB * 20 views * 50 million active users * 5 scale |
+| User added data | 2GB | 50MB | 500TB | 100KB text description * 10000 products * 2 replication, 100KB * 100 updates * 5 scale, 100KB * 20 views * 50 million active users * 5 scale |
 | Media data | 220GB | 5,5GB | 55PB | 11BM * 10000 products * 2 replication, 11MB * 100 updates * 5 scale, 11MB * 20 views * 50 million active users * 5 scale |
 
 ##### Meta Data 
@@ -567,9 +567,9 @@ Considering the requirement to scale five times and the need for replication for
 
 * **Data Storage and Management:**
     * Data Type: Product metadata
-    * Data Volume Store: 200GB
-    * Data Volume Write per Day: 5GB 
-    * Data Volume Read per Day: 50PB -> well-suited for caching 
+    * Data Volume Store: 2,2GB
+    * Data Volume Write per Day: 55MB 
+    * Data Volume Read per Day: 500TB -> well-suited for caching 
 
 * **User Experience:**
     * Advanced product search capabilities, including:
